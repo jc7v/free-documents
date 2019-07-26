@@ -1,0 +1,21 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title FreeDocuments
+    = stylesheet_link_tag    'application', media: 'all'
+    = javascript_include_tag 'application'
+    = csrf_meta_tags
+  %body
+    .container
+      .row
+        .col-12
+          -flash.each do |msg_type, msg|
+            %div{class: "alert alert-#{bootstrap_alert(msg_type)} alert-dismissible", role: "alert"}
+              = msg
+              %button.close{type: 'button', 'data-dismiss' => 'alert', 'aria-label' => 'Close'}
+                %span{'aria-hidden' => 'true'}
+                  &times;
+      .row
+        .col-12
+          = yield
