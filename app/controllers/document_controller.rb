@@ -7,6 +7,10 @@ class DocumentController < ApplicationController
     redirect_to root_path
   end
 
+  def new
+    @document = Document.new
+  end
+
   def create
   end
 
