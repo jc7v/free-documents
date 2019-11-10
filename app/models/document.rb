@@ -1,5 +1,6 @@
 class Document < ActiveRecord::Base
   belongs_to :user
+  has_one_attached :doc_asset
 
   validates_presence_of :title, :doc_asset
   validates :number_of_pages, numericality: {greater_than_or_equal_to: 0}
