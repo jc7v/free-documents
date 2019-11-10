@@ -8,3 +8,6 @@
 
 User.create!(email: 'user@mail.com', password: 'password')
 Manager.create!(email: 'admin@mail.com', password: 'password', approved: true)
+100.times do |i|
+  Document.create!(title: '')
+end
