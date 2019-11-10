@@ -1,6 +1,6 @@
 class DocumentController < ApplicationController
   def index
-
+    @documents = Document.order(updated_at: :desc).page(params[:page])
   end
 
   def show
@@ -19,4 +19,7 @@ class DocumentController < ApplicationController
 
   def delete
   end
+
+  private
+
 end
