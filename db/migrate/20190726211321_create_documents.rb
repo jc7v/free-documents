@@ -1,4 +1,4 @@
-class CreateDocuments < ActiveRecord::Migration
+class CreateDocuments < ActiveRecord::Migration[5.2]
   def change
     create_table :documents do |t|
       t.string :title
@@ -6,11 +6,9 @@ class CreateDocuments < ActiveRecord::Migration
       t.string :author
       t.integer :number_of_pages
       t.date :realized_at
-      t.boolean :is_accepted, default: false
       t.integer :hits
-      t.boolean :is_refused, default: false
+      t.integer :status, default: 0
       t.references :user, index: true, foreign_key: true
-      t.string :doc_asset
 
       t.timestamps null: false
     end
