@@ -1,4 +1,4 @@
-class Document < ActiveRecord::Base
+class Document < ApplicationRecord
   belongs_to :user
   has_one_attached :doc_asset
   enum status: [:refused, :accepted]
