@@ -117,3 +117,5 @@ en:
   documents:
     new:
       title: "Upload a new document"
+    errors:
+      realized_at: "This document cannot have been realized in the future"
