@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   root 'document#index'
-  # resources :document, except: [:index]
+  resources :document, only: [:show]
 
   devise_for :users
   devise_for :managers
