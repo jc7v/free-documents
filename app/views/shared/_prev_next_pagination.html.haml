@@ -1,0 +1,6 @@
+.row.align-items-center
+  .col
+    %p.text-center
+      = link_to('<', path_to_prev_page(collection), class: 'btn btn-info') if path_to_prev_page(collection)
+      = t('pagination.page', page: params[:page] || 1, total_pages: total_pages)
+      = link_to('>', path_to_next_page(collection), class: 'btn btn-info') if path_to_next_page(collection)

@@ -11,7 +11,7 @@ namespace :import do
     Dir[File.join(args[:folder], '**', '*')].each do |file|
       next if File.directory?(file)
       doc = Document.new(
-          description: Faker::Lorem.sentences,
+          description: Faker::Lorem.sentences(2..5),
           author: Faker::Name.name,
           number_of_pages: rand(0..100),
           realized_at: Faker::Date.backward,

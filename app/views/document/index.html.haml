@@ -1,8 +1,9 @@
 %h3= t('documents.index.title')
 %hr
-
+= prev_next_pagination(@documents, Document)
 .row
   %ul.list-group.row
+    %p= t('documents.index.empty') unless @documents
     - @documents.each do |doc|
       .list-group-item.col-lg-4.col-sm-6
         %h4= link_to doc.title, document_path(doc)
@@ -12,3 +13,4 @@
           .col-sm-8.col-md-9
             %p
               = doc.description.truncate(120, separator: ' ')
+= prev_next_pagination(@documents, Document)

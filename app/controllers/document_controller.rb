@@ -1,6 +1,7 @@
 class DocumentController < ApplicationController
   def index
-    @documents = Document.order(updated_at: :desc).page(params[:page])
+    # TODO: include blob
+    @documents = Document.order(updated_at: :desc).page(params[:page]).without_count
   end
 
   def show
