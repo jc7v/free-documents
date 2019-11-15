@@ -9,8 +9,9 @@ module ApplicationHelper
     asset_url('unknow.png')
   end
 
-  def prev_next_pagination(collection, record)
-    paginate = Paginate.new(collection, record) # TODO: Paginate should return the same instance for the same collection
-    render('shared/prev_next_pagination', collection: collection, total_pages: paginate.total_pages ) if paginate.has_multiple_pages?
+  def prev_next_pagination(collection)
+    unless collection.first_page? and collection.last_page?
+      render('shared/prev_next_pagination', collection: collection, total_pages: collection.total_pages) if collection.any?
+    end
   end
 end

@@ -1,7 +1,11 @@
 class DocumentController < ApplicationController
   def index
     # TODO: include blob
-    @documents = Document.order(updated_at: :desc).page(params[:page]).without_count
+    @documents = Document
+                     .order(updated_at: :desc).page(params[:page])
+                     .includes(doc_asset_attachment: :blob)
+                     .where(status: :accepted)
+                      .page(params[:page])
   end
 
   def show
