@@ -1,4 +1,7 @@
 class DocumentController < ApplicationController
+
+  before_action :find_document, only: [ :show ]
+
   def index
     @order_by_choices = {
         updated_at_desc: [{updated_at: :desc}, t('documents.index.order_by.updated_at_desc')],
@@ -15,22 +18,18 @@ class DocumentController < ApplicationController
   end
 
   def show
-    @document = Document.find(params[:id])
   end
 
-  def new
-    @document = Document.new
-  end
-
-  def create
-  end
-
-  def update
-  end
-
-  def delete
+  def download
+    @document = Document.find(params[:document_id])
+    @document.hits+=1
+    @document.save
+    redirect_to rails_blob_path(@document.doc_asset, dispositon: 'attachment')
   end
 
   private
 
+  def find_document
+    @document = Document.find(params[:id])
+  end
 end

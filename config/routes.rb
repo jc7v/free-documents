@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   root 'document#index'
-  resources :document, only: [:show]
+  resources :document, only: [:show] do
+    get 'download'
+  end
 
   devise_for :users
   devise_for :managers

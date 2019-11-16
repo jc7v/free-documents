@@ -17,7 +17,9 @@
   %ul.list-group.row
     - @documents.each do |doc|
       .list-group-item.col-lg-4.col-sm-6
-        %h4.text-truncate{style: 'max-height: 10px'}= link_to doc.title, document_path(doc)
+        %h4.text-truncate{style: 'max-height: 10px'}
+          = link_to doc.title, document_path(doc)
+          = link_to '', document_download_path(document_id: doc), class: 'glyphicon glyphicon-download'
         .row
           .col-sm-4.col-md-3
             = link_to image_tag(preview_document(doc.doc_asset), class: 'img-thumbnail wrapped'), document_path(doc)
