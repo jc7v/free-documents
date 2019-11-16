@@ -19,4 +19,8 @@ module ApplicationHelper
     order_by = params[:order_by]
     (order_by.nil? and value == :updated_at_desc) or (order_by.respond_to?(:to_sym) and value == order_by.to_sym)
   end
+
+  def tag_selected?(tag)
+    (params[:tag_ids].respond_to?(:include?) and params[:tag_ids].include?(tag.id.to_s))
+  end
 end

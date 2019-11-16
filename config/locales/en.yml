@@ -138,6 +138,7 @@ en:
         label: "Order by"
       tags:
         label: "Filter by tag(s)"
+        no_filter: "--- No filters ---"
     paginate: "Documents pagination"
     no_description: "No description provided"
   pagination:
