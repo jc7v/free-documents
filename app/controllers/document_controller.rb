@@ -13,6 +13,7 @@ class DocumentController < ApplicationController
     @documents = Document
                      .order(@order_by_choices[order_by].first)
                      .includes(doc_asset_attachment: :blob)
+                     .includes(:tags)
                      .where(status: :accepted)
                       .page(params[:page])
   end

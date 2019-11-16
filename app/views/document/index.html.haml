@@ -17,7 +17,7 @@
   %ul.list-group.row
     - @documents.each do |doc|
       .list-group-item.col-lg-4.col-sm-6
-        %h4.text-truncate{style: 'max-height: 10px'}
+        %h4
           = link_to doc.title, document_path(doc)
           = link_to '', document_download_path(document_id: doc), class: 'glyphicon glyphicon-download'
         .row
@@ -26,4 +26,7 @@
           .col-sm-8.col-md-9
             %p
               = doc.description .truncate(120, separator: ' ')
+            %h5
+            - doc.tags.each do |tag|
+              = link_to tag, "?tags=[#{tag.id}]", class: 'badge badge-secondary'
 = prev_next_pagination(@documents)
