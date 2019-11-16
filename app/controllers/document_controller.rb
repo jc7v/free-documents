@@ -24,7 +24,7 @@ class DocumentController < ApplicationController
     @document = Document.find(params[:document_id])
     @document.hits+=1
     @document.save
-    redirect_to rails_blob_path(@document.doc_asset, dispositon: 'attachment')
+    redirect_to rails_blob_path(@document.doc_asset, dispositon: 'attachment') # TODO: open new tab
   end
 
   private

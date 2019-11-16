@@ -135,5 +135,8 @@ en:
         title_desc: "title from Z to A"
         title_asc: "title from A to Z"
         submit: "Go!"
+    paginate: "Documents pagination"
   pagination:
     page: "Page %{page} of %{total_pages}"
+    previous: "Previous"
+    next: "Next"
