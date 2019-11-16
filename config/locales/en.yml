@@ -135,7 +135,11 @@ en:
         title_desc: "title from Z to A"
         title_asc: "title from A to Z"
         submit: "Go!"
+        label: "Order by"
+      tags:
+        label: "Filter by tag(s)"
     paginate: "Documents pagination"
+    no_description: "No description provided"
   pagination:
     page: "Page %{page} of %{total_pages}"
     previous: "Previous"

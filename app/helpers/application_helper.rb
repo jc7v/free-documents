@@ -15,7 +15,7 @@ module ApplicationHelper
     end
   end
 
-  def selected(value)
+  def sort_selected?(value)
     order_by = params[:order_by]
     (order_by.nil? and value == :updated_at_desc) or (order_by.respond_to?(:to_sym) and value == order_by.to_sym)
   end

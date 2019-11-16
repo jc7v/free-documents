@@ -1,19 +1,25 @@
 %h3= t('documents.index.title')
 %hr
-%p= t('documents.index.empty') unless @documents
 = prev_next_pagination(@documents)
 .row
   .col
     %form{action: root_path, method: 'GET'}
       .form-group.row
-        %label.col-sm-1.col-form-label{for: 'order_by'} Order by
+        %label.col-sm-1.col-form-label{for: 'order_by'}= t('documents.index.order_by.label')
         .col-sm-3
-          %select.form-control{id: 'order_by', name: 'order_by', placeholder: 'Select...'}
+          %select.form-control{id: 'order_by', name: 'order_by'}
             - @order_by_choices.each_pair do |value, text|
-              %option{value: value, selected: selected(value)}= text.last
+              %option{value: value, selected: sort_selected?(value)}= text.last
+        %label.col-sm-2.col-form-label{for: 'order_by'}= t('documents.index.tags.label')
+        .col-sm-3
+          %select.form-control{id: 'tag_ids', name: 'tag_ids[]', multiple: true}
+            %option{value: ''}
+            - Tag.all.each do |tag|
+              %option{value: tag.id, selected: (params[:tag_ids].respond_to?(:include?) and params[:tag_ids].include?(tag.id.to_s)) }= h(tag.name)
         .col-sm-1
           %input.btn.btn-primary{type: 'submit', value: t('documents.index.order_by.submit')}
 .row
+  %p= t('documents.index.empty') if @documents.empty?
   %ul.list-group.row
     - @documents.each do |doc|
       .list-group-item.col-lg-4.col-sm-6
@@ -25,7 +31,7 @@
             = link_to image_tag(preview_document(doc.doc_asset), class: 'img-thumbnail wrapped'), document_path(doc)
           .col-sm-8.col-md-9
             %p
-              = doc.description .truncate(120, separator: ' ')
+              = doc.description .truncate(120, separator: ' ') || t('documents.no_description')
             %h5
             - doc.tags.each do |tag|
               = link_to tag, "?tags=[#{tag.id}]", class: 'badge badge-secondary'
