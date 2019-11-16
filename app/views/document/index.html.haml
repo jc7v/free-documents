@@ -1,16 +1,27 @@
 %h3= t('documents.index.title')
 %hr
-%p= t('documents.index.empty') unless @documents.any?
+%p= t('documents.index.empty') unless @documents
 = prev_next_pagination(@documents)
+.row
+  .col
+    %form{action: root_path, method: 'GET'}
+      .form-group.row
+        %label.col-sm-1.col-form-label{for: 'order_by'} Order by
+        .col-sm-3
+          %select.form-control{id: 'order_by', name: 'order_by', placeholder: 'Select...'}
+            - @order_by_choices.each_pair do |value, text|
+              %option{value: value, selected: selected(value)}= text.last
+        .col-sm-1
+          %input.btn.btn-primary{type: 'submit', value: t('documents.index.order_by.submit')}
 .row
   %ul.list-group.row
     - @documents.each do |doc|
       .list-group-item.col-lg-4.col-sm-6
-        %h4= link_to doc.title, document_path(doc)
+        %h4.text-truncate{style: 'max-height: 10px'}= link_to doc.title, document_path(doc)
         .row
           .col-sm-4.col-md-3
             = link_to image_tag(preview_document(doc.doc_asset), class: 'img-thumbnail wrapped'), document_path(doc)
           .col-sm-8.col-md-9
             %p
-              = doc.description.truncate(120, separator: ' ')
+              = doc.description .truncate(120, separator: ' ')
 = prev_next_pagination(@documents)

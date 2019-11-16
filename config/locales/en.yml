@@ -129,5 +129,11 @@ en:
     index:
       title: "Listing all documents"
       empty: "No documents"
+      order_by:
+        updated_at_desc: "the last updated first"
+        updated_at_asc: "the older updated first"
+        title_desc: "title from Z to A"
+        title_asc: "title from A to Z"
+        submit: "Go!"
   pagination:
     page: "Page %{page} of %{total_pages}"
