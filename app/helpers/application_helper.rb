@@ -25,6 +25,7 @@ module ApplicationHelper
   end
 
   def tags_to_badges(document)
+    document = document.reload if params[:tag_ids]
     document.tags.map do |tag|
       link_to tag, root_path('tag_ids[]' => tag.id), class: 'badge badge-secondary'
     end.join(' ').html_safe

@@ -5,24 +5,24 @@
   .col
     %form{action: root_path, method: 'GET'}
       .form-group.row
-        %label.col-sm-1.col-form-label{for: 'order_by'}= t('documents.index.order_by.label')
-        .col-sm-3
+        %label.col-sm-1.col-xs-12.col-form-label{for: 'order_by'}= t('documents.index.order_by.label')
+        .col-sm-3.col-xs-12
           %select.form-control{id: 'order_by', name: 'order_by'}
             - @order_by_choices.each_pair do |value, text|
               %option{value: value, selected: sort_selected?(value)}= text.last
         %label.col-sm-2.col-form-label{for: 'order_by'}= t('documents.index.tags.label')
-        .col-sm-3
+        .col-md-1.col-sm-12.col-lg-3
           %select.form-control{id: 'tag_ids', name: 'tag_ids[]', multiple: 'multiple'}
             %option{value: ''}= t('documents.index.tags.no_filter')
             - Tag.all.each do |tag|
               %option{value: tag.id, selected: tag_selected?(tag) }= h(tag.name)
-        .col-sm-1.col-12
+        .col-sm-1
           %input.btn.btn-primary{type: 'submit', value: t('documents.index.order_by.submit')}
 .row
   %p= t('documents.index.empty') if @documents.empty?
   %ul.row.list-unstyled
     - @documents.each do |doc|
-      %li.col-4.border
+      %li.col-lg-6.col-xl-4.border
         %h4
           = link_to doc.title, document_path(doc)
           |
