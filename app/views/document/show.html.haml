@@ -1,2 +1,33 @@
-%h1 Document#show
-%p Find me in app/views/document/show.html.haml
+.row
+  .col-12
+    %h1
+      = link_to '', root_path, class: 'glyphicon glyphicon-menu-left'
+      = @document.title
+      = document_download_icon(@document)
+  .col-12
+    %h5= tags_to_badges(@document)
+.row
+  .col-sm-4
+    %dl.row
+      %dt.col-lg-5.col-md-6.col-sm-12= t('documents.show.author')
+      %dd.col-lg-7.col-md-6.col-sm-12= @document.author
+      %dt.col-lg-5.col-md-6.col-sm-12= t('documents.show.realized_at')
+      %dd.col-lg-7.col-md-6.col-sm-12= @document.realized_at.to_s(:long)
+      %dt.col-lg-5.col-md-6.col-sm-12= t('documents.show.number_of_pages')
+      %dd.col-lg-7.col-md-6.col-sm-12= @document.number_of_pages
+      %dt.col-lg-5.col-md-6.col-sm-12= t('documents.show.hits')
+      %dd.col-lg-7.col-md-6.col-sm-12= t('documents.show.hits_times', hits: @document.hits)
+      %dt.col-lg-5.col-md-6.col-sm-12= t('documents.show.created_by')
+      %dd.col-lg-7.col-md-6.col-sm-12= @document.user.email
+      %dt.col-lg-5.col-md-6.col-sm-12= t('documents.show.updated_at')
+      %dd.col-lg-7.col-md-6.col-sm-12= @document.updated_at.to_s(:long)
+  .col-sm-8
+    .row
+      .col-lg-4
+        .text-center
+          = image_tag(preview_document(@document.doc_asset), class: 'img-fluid')
+      -# TODO: hide on large screen
+      .col.d-none
+        %hr
+      .col-lg-8
+        %p= @document.description

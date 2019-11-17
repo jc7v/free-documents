@@ -137,10 +137,18 @@ en:
         submit: "Go!"
         label: "Order by"
       tags:
-        label: "Filter by tag(s)"
+        label: "Filter by tags"
         no_filter: "--- No filters ---"
     paginate: "Documents pagination"
     no_description: "No description provided"
+    show:
+      author: "Author"
+      realized_at: "Realized"
+      number_of_pages: "Number of pages"
+      hits: "Downloaded"
+      created_by: "Created by"
+      updated_at: "Last update"
+      hits_times: "%{hits} times"
   pagination:
     page: "Page %{page} of %{total_pages}"
     previous: "Previous"

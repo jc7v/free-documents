@@ -16,23 +16,22 @@
             %option{value: ''}= t('documents.index.tags.no_filter')
             - Tag.all.each do |tag|
               %option{value: tag.id, selected: tag_selected?(tag) }= h(tag.name)
-        .col-sm-1
+        .col-sm-1.col-12
           %input.btn.btn-primary{type: 'submit', value: t('documents.index.order_by.submit')}
 .row
   %p= t('documents.index.empty') if @documents.empty?
   %ul.list-group.row
     - @documents.each do |doc|
-      .list-group-item.col-lg-4.col-sm-6
+      .list-group-item.col-lg-4.col-sm-6.doc_index_item
         %h4
           = link_to doc.title, document_path(doc)
-          = link_to '', document_download_path(document_id: doc), class: 'glyphicon glyphicon-download'
+          |
+          = document_download_icon(doc)
         .row
           .col-sm-4.col-md-3
             = link_to image_tag(preview_document(doc.doc_asset), class: 'img-thumbnail wrapped'), document_path(doc)
           .col-sm-8.col-md-9
             %p
               = doc.description .truncate(120, separator: ' ') || t('documents.no_description')
-            %h5
-            - doc.tags.each do |tag|
-              = link_to tag, "?tag_ids[]=#{tag.id}", class: 'badge badge-secondary'
+            %h5= tags_to_badges(doc)
 = prev_next_pagination(@documents)

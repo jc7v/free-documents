@@ -23,4 +23,14 @@ module ApplicationHelper
   def tag_selected?(tag)
     (params[:tag_ids].respond_to?(:include?) and params[:tag_ids].include?(tag.id.to_s))
   end
+
+  def tags_to_badges(document)
+    document.tags.map do |tag|
+      link_to tag, root_path('tag_ids[]' => tag.id), class: 'badge badge-secondary'
+    end.join(' ').html_safe
+  end
+
+  def document_download_icon(document)
+    link_to '', document_download_path(document_id: document), class: 'glyphicon glyphicon-download'
+  end
 end
