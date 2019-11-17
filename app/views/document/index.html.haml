@@ -12,7 +12,7 @@
               %option{value: value, selected: sort_selected?(value)}= text.last
         %label.col-sm-2.col-form-label{for: 'order_by'}= t('documents.index.tags.label')
         .col-sm-3
-          %select.form-control{id: 'tag_ids', name: 'tag_ids[]', multiple: true}
+          %select.form-control{id: 'tag_ids', name: 'tag_ids[]', multiple: 'multiple'}
             %option{value: ''}= t('documents.index.tags.no_filter')
             - Tag.all.each do |tag|
               %option{value: tag.id, selected: tag_selected?(tag) }= h(tag.name)
@@ -20,9 +20,9 @@
           %input.btn.btn-primary{type: 'submit', value: t('documents.index.order_by.submit')}
 .row
   %p= t('documents.index.empty') if @documents.empty?
-  %ul.list-group.row
+  %ul.row.list-unstyled
     - @documents.each do |doc|
-      .list-group-item.col-lg-4.col-sm-6.doc_index_item
+      %li.col-4.border
         %h4
           = link_to doc.title, document_path(doc)
           |

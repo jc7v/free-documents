@@ -1,5 +1,11 @@
-@import "bootstrap-sprockets";
 @import "bootstrap";
+$bootstrap-sass-asset-helper: false;
+$icon-font-name: 'glyphicons-halflings-regular';
+$icon-font-svg-id: 'glyphicons_halflingsregular';
+$icon-font-path: './';
+@import "glyphicons";
+@import "select2";
+@import "select2-bootstrap";
 
 .wrapped {
   //float: left;

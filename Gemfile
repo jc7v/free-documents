@@ -38,11 +38,12 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'haml-rails'
-gem 'bootstrap-sass'
+gem 'bootstrap', '~> 4.3.1'
 gem 'simple_form'
 gem 'devise'
 gem 'rails_admin'
 gem 'kaminari'
+gem 'select2-rails'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
