@@ -4,7 +4,7 @@ module ApplicationHelper
   end
 
   def preview_document(asset)
-    return asset if asset.image?
+    return asset.variant(resize: '450x300') if asset.image?
     return asset_url('pdf.png') if asset.blob.content_type == 'application/pdf'
     asset_url('unknow.png')
   end

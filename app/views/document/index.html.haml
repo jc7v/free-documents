@@ -1,17 +1,17 @@
-%h3= t('documents.index.title')
+%h1= t('documents.index.title')
 %hr
 = prev_next_pagination(@documents)
 .row
   .col
     %form{action: root_path, method: 'GET'}
       .form-group.row
-        %label.col-sm-1.col-xs-12.col-form-label{for: 'order_by'}= t('documents.index.order_by.label')
-        .col-sm-3.col-xs-12
+        %label.col-sm-1.col-form-label{for: 'order_by'}= t('documents.index.order_by.label')
+        .col-sm-3
           %select.form-control{id: 'order_by', name: 'order_by'}
             - @order_by_choices.each_pair do |value, text|
               %option{value: value, selected: sort_selected?(value)}= text.last
         %label.col-sm-2.col-form-label{for: 'order_by'}= t('documents.index.tags.label')
-        .col-md-1.col-sm-12.col-lg-3
+        .col-md-3.col-sm-3.col-lg-3
           %select.form-control{id: 'tag_ids', name: 'tag_ids[]', multiple: 'multiple'}
             %option{value: ''}= t('documents.index.tags.no_filter')
             - Tag.all.each do |tag|
@@ -29,7 +29,7 @@
           = document_download_icon(doc)
         .row
           .col-sm-4.col-md-3
-            = link_to image_tag(preview_document(doc.doc_asset), class: 'img-thumbnail wrapped'), document_path(doc)
+            = link_to image_tag(preview_document(doc.doc_asset), class: 'img-thumbnail'), document_path(doc)
           .col-sm-8.col-md-9
             %p
               = doc.description .truncate(120, separator: ' ') || t('documents.no_description')
