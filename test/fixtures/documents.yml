@@ -1,0 +1,16 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+doc1:
+  title: Document on
+  description: <%= Faker::Lorem.sentence %>
+  author: Author one
+  number_of_pages: 10
+  realized_at: 1900-10-10
+  hits: 20
+  status: :accepted
+  user: user1
+  tags: tag1, tag2, tag3

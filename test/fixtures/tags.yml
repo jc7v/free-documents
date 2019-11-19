@@ -1,11 +1,10 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  document: one
-  document_type: Document
+  name: tag1
 
 two:
-  name: MyString
-  document: two
-  document_type: Document
+  name: tag2
+
+three:
+  name: tag3
