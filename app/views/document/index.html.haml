@@ -12,7 +12,7 @@
               %option{value: value, selected: sort_selected?(value)}= text.last
         %label.col-sm-2.col-form-label{for: 'order_by'}= t('documents.index.tags.label')
         .col-md-3.col-sm-3.col-lg-3
-          %select.form-control{id: 'tag_ids', name: 'tag_ids[]', multiple: 'multiple'}
+          %select.form-control.tags-select2{id: 'tag_ids', name: 'tag_ids[]', multiple: 'multiple'}
             %option{value: ''}= t('documents.index.tags.no_filter')
             - Tag.all.each do |tag|
               %option{value: tag.id, selected: tag_selected?(tag) }= h(tag.name)

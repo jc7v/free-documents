@@ -20,7 +20,7 @@
 
 
 $(document).ready(function() {
-    $('#tag_ids').select2({
+    $('.tags-select2').select2({
         theme: "bootstrap"
     });
 });
