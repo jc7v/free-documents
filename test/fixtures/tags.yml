@@ -1,10 +1,10 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
+tag1:
   name: tag1
 
-two:
+tag2:
   name: tag2
 
-three:
+tag3:
   name: tag3

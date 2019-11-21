@@ -126,6 +126,8 @@ en:
       title: "Upload a new document"
     errors:
       realized_at: "This document cannot have been realized in the future"
+      doc_asset:
+        presence: "A file is required to upload"
     index:
       title: "Listing all documents"
       empty: "No documents"
