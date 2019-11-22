@@ -4,13 +4,16 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-doc1:
-  title: Document on
-  description: <%= Faker::Lorem.sentence %>
-  author: Author one
-  number_of_pages: 10
-  realized_at: 1900-10-10
-  hits: 20
-  status: :accepted
-  user: user1
-  tags: tag1, tag2, tag3
+
+<% 50.times do |i| %>
+ doc<%= i %>:
+    title: <%= "Document #{i}" %>
+    description: <%= Faker::Lorem.sentence %>
+    author: Author one
+    number_of_pages: 10
+    realized_at: 1900-10-10
+    hits: 20
+    status: :accepted
+    user: user1
+    tags: tag1, tag2, tag3
+<% end %>

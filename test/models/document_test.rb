@@ -73,4 +73,23 @@ class DocumentTest < ActiveSupport::TestCase
     d.save
     assert_equal(d.reload.tag_ids, tag_ids)
   end
+
+  test 'order by user choice' do
+    docs = Document.order_by(:updated_at_desc).all
+    (docs.size - 1).times do |i|
+      assert(docs[i].updated_at >= docs[i + 1].updated_at)
+    end
+    docs = Document.order_by(nil).all
+    (docs.size - 1).times do |i|
+      assert(docs[i].updated_at >= docs[i + 1].updated_at)
+    end
+     docs = Document.order_by('`sudo`').all
+    (docs.size - 1).times do |i|
+      assert(docs[i].updated_at >= docs[i + 1].updated_at)
+    end
+    docs = Document.order_by(:title_asc).all
+    (docs.size - 1).times do |i|
+      assert(docs[i].title < docs[i + 1].title)
+    end
+  end
 end

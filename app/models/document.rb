@@ -1,4 +1,5 @@
 class Document < ApplicationRecord
+
   has_and_belongs_to_many :tags
   belongs_to :user
   has_one_attached :doc_asset
@@ -11,6 +12,21 @@ class Document < ApplicationRecord
   validates :author, length: {maximum: 50}
   validate :realized_at_before_today
   validate :doc_asset_presence
+
+  def self.order_by(choice=:updated_at_desc)
+    choice = (choice || :updated_at_desc).to_sym
+    choice = :updated_at_desc unless ordered_choices.has_key?(choice)
+    order(ordered_choices[choice].first)
+  end
+
+  def self.ordered_choices
+    @@order_by_choices ||= {
+      updated_at_desc: [{updated_at: :desc}, I18n.t('documents.index.order_by.updated_at_desc')],
+      updated_at_asc: [{updated_at: :asc}, I18n.t('documents.index.order_by.updated_at_asc')],
+      title_desc: [{title: :desc}, I18n.t('documents.index.order_by.title_desc')],
+      title_asc: [{title: :asc}, I18n.t('documents.index.order_by.title_asc')],
+    }
+  end
 
   private
 
