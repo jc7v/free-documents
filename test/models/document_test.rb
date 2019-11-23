@@ -92,4 +92,28 @@ class DocumentTest < ActiveSupport::TestCase
       assert(docs[i].title < docs[i + 1].title)
     end
   end
+
+  test 'includes attachments and blobs' do
+    # TODO write test
+    assert_equal(50, Document.include_blobs.size)
+  end
+
+  test 'find all documents with status accepted' do
+    count = 0
+    Document.all[0..5].each do |d|
+      d.status = :refused
+      d.user = users(:user1)
+      attach_asset(d)
+      d.save
+      count += 1
+    end
+    Document.accepted.each do |d|
+      assert_equal(d.status.to_sym, :accepted)
+    end
+    assert_equal(Document.accepted.size, Document.all.size - count)
+  end
+
+  test 'find documents having the given tags' do
+
+  end
 end

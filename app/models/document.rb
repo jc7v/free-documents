@@ -13,6 +13,18 @@ class Document < ApplicationRecord
   validate :realized_at_before_today
   validate :doc_asset_presence
 
+  scope :include_blobs, -> {
+    # includes(doc_asset_attachment: :blob)
+  }
+
+  scope :accepted, -> {
+    where(status: :accepted)
+  }
+
+  scope :find_by_tags, ->(ids) {
+
+  }
+
   def self.order_by(choice=:updated_at_desc)
     choice = (choice || :updated_at_desc).to_sym
     choice = :updated_at_desc unless ordered_choices.has_key?(choice)
@@ -26,6 +38,13 @@ class Document < ApplicationRecord
       title_desc: [{title: :desc}, I18n.t('documents.index.order_by.title_desc')],
       title_asc: [{title: :asc}, I18n.t('documents.index.order_by.title_asc')],
     }
+  end
+
+  searchable do
+    text :title, :description
+    text :doc_asset do
+      PDFToText.new(self.doc_asset.blob).to_s if doc_asset.content_type == 'application/pdf'
+    end
   end
 
   private
