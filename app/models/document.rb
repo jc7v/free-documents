@@ -14,25 +14,45 @@ class Document < ApplicationRecord
   validate :doc_asset_presence
 
   scope :include_blobs, -> {
-    # includes(doc_asset_attachment: :blob)
+     includes(doc_asset_attachment: :blob)
   }
 
+  ##
+  # find all documents with the status accepted
   scope :accepted, -> {
     where(status: :accepted)
   }
 
-  scope :find_by_tags, ->(ids) {
-
+  ##
+  # Find all documents associated to any of the given tags
+  # *ids* is an array of ids corresponding to the tags to search for
+  # Actually, it find all the documents associated at least with one of the tags
+  # To find all the documents associated with all the given tags:
+  #     having('COUNT(DISTINCT tags.id) = :having', having: ids.size)
+  scope :filter_by_tags, ->(ids) {
+    if ids.respond_to?(:any?) and ids.any?
+      joins(:tags)
+          .where(tags: {id: ids})
+          .group(:id)
+    end
   }
 
+  ##
+  # Order the documents from the user input choice.
+  # If the user choice is not a choice included in *ordered_choices*
+  # The default value *updated_at_desc* is used
   def self.order_by(choice=:updated_at_desc)
     choice = (choice || :updated_at_desc).to_sym
     choice = :updated_at_desc unless ordered_choices.has_key?(choice)
     order(ordered_choices[choice].first)
   end
 
+  ##
+  # return a *Hash* with the possible ways to to order the collection Document for a user.
+  # the keys of the *Hash* is the possible choices for the user and the values, an *Array*
+  # at pos 0 is how to order the collection with AR and position 1 describe how it order it for the user
   def self.ordered_choices
-    @@order_by_choices ||= {
+    @@order_by_choices = {
       updated_at_desc: [{updated_at: :desc}, I18n.t('documents.index.order_by.updated_at_desc')],
       updated_at_asc: [{updated_at: :asc}, I18n.t('documents.index.order_by.updated_at_asc')],
       title_desc: [{title: :desc}, I18n.t('documents.index.order_by.title_desc')],
@@ -40,11 +60,17 @@ class Document < ApplicationRecord
     }
   end
 
+  ##
+  # For SolR indexing
   searchable do
     text :title, :description
     text :doc_asset do
-      PDFToText.new(self.doc_asset.blob).to_s if doc_asset.content_type == 'application/pdf'
+      ActiveStorage::TextConverter.new(doc_asset.blob).to_s if pdf?
     end
+  end
+
+  def pdf?
+    doc_asset.content_type == 'application/pdf'
   end
 
   private
