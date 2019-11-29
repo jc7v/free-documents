@@ -1,6 +1,7 @@
-%h1= t('documents.index.title')
+%h1
+  = t('documents.index.title')
+= render 'search_form'
 %hr
-= prev_next_pagination(@documents)
 .row
   .col
     %form{action: root_path, method: 'GET'}
@@ -16,7 +17,8 @@
             - Tag.all.each do |tag|
               %option{value: tag.id, selected: tag_selected?(tag) }= h(tag.name)
         .col-sm-1
-          %input.btn.btn-primary{type: 'submit', value: t('documents.index.order_by.submit')}
+          %input.btn.btn-outline-secondary{type: 'submit', value: t('documents.index.order_by.submit')}
+= prev_next_pagination(@documents)
 .row
   %p= t('documents.index.empty') if @documents.empty?
   %ul.row.list-unstyled

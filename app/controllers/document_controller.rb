@@ -6,6 +6,7 @@ class DocumentController < ApplicationController
     @documents = Document
                      .order_by(params[:order_by])
                      .include_blobs
+                     .includes(:tags)
                      .filter_by_tags(params[:tag_ids])
                      .accepted
                      .page(params[:page])
@@ -28,6 +29,17 @@ class DocumentController < ApplicationController
     @document.hits += 1
     @document.save
     redirect_to rails_blob_path(@document.doc_asset, dispositon: :attachment) # TODO: open new tab
+  end
+
+  def search
+    redirect_to root_path if params[:q].blank?
+    @documents = Document.search(include: {doc_asset_attachment: :blob}) do
+      fulltext params[:q], highlight: true
+      with(:accepted, true)
+      if (page = params[:page]) and page.respond_to?(:to_i)
+        paginate(page: page.to_i, per_page: 15)
+      end
+    end
   end
 
   private

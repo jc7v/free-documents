@@ -63,6 +63,7 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'sunspot_solr'
+  gem 'progress_bar'
 end
 
 group :test do

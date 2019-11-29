@@ -63,10 +63,12 @@ class Document < ApplicationRecord
   ##
   # For SolR indexing
   searchable do
-    text :title, :description
-    text :doc_asset do
+    text :title, stored: true
+    text :description, stored: true
+    text :doc_asset, stored: true do
       ActiveStorage::TextConverter.new(doc_asset.blob).to_s if pdf?
     end
+    boolean(:accepted) { status == 'accepted' }
   end
 
   def pdf?

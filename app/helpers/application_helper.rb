@@ -13,7 +13,7 @@ module ApplicationHelper
 
   def prev_next_pagination(collection)
     unless collection.first_page? and collection.last_page?
-      render('shared/prev_next_pagination', collection: collection, total_pages: collection.total_pages) if collection.any?
+      render('shared/prev_next_pagination', collection: collection, total_pages: collection.total_pages) if collection.length > 0
     end
   end
 
@@ -35,5 +35,12 @@ module ApplicationHelper
 
   def document_download_icon(document)
     link_to '', document_download_path(document_id: document), class: 'glyphicon glyphicon-download'
+  end
+
+  ##
+  # Print the highlighted word of the *what* field formatted with the corresponding html tag.
+  # if no highlight for the *hit*, the field given by *what* is tried for *result*
+  def highlight_solr(hit, result, what)
+    hit.highlight(what).try(:format) {|word| "<tt class='bg-warning'>#{h(word)}</tt>"}.try(:html_safe) || result.try(what)
   end
 end

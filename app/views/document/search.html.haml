@@ -1,0 +1,22 @@
+%h1
+  = t('documents.search.title', results: @documents.total)
+= render 'search_form'
+= prev_next_pagination(@documents.results)
+.row
+  %ul.row.list-unstyled
+    -@documents.each_hit_with_result do |hit, result|
+      %li.col-lg-6.col-xl-4.border
+        .row
+          .col-sm-4.col-md-3
+            = link_to image_tag(preview_document(result.doc_asset), class: 'img-thumbnail'), result
+          .col-sm-8.col-md-9
+            %h4.overflow-hidden= link_to highlight_solr(hit, result, :title), result
+            %p.overflow-hidden= highlight_solr(hit, result, :description)
+            -if phrase = hit.highlight(:doc_asset)
+              %blockquote.blockquote
+                %p.overflow-hidden= phrase.format {|word| "<tt class='bg-warning'>#{h(word)}</tt>"}.try(:html_safe)
+                %footer.blockquote-footer
+                  From the
+                  %cite= link_to 'attached file', document_download_path(result)
+
+

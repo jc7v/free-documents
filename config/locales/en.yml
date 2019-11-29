@@ -151,7 +151,13 @@ en:
       created_by: "Created by"
       updated_at: "Last update"
       hits_times: "%{hits} times"
+    search:
+      title: "%{results} results for:"
+      submit: "Search"
+      placeholder_search_input: "Search in the documents and in their attached files. It works!"
   pagination:
     page: "Page %{page} of %{total_pages}"
     previous: "Previous"
     next: "Next"
+  pluralize:
+    word: "word"
