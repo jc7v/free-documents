@@ -1,14 +1,14 @@
 .row
-  .col
+  .col-12
     = form_tag(search_document_index_path, method: :get, enforce_utf8: false) do
-      .form-group.form-group-lg
-        .input-group
+      .form-group
+        .input-group.input-group-lg
           - if not current_page? root_path
-            .input-group-prepend
+            .input-group-prepend.input-group-addon
               = link_to '', root_path, class: 'glyphicon glyphicon-home btn btn-outline-secondary form-control form-control-lg'
-          %input.form-control.form-control-lg{type: 'text', name: 'q', placeholder: t('documents.search.placeholder_search_input'), value: h(params[:q])}
+          %input.form-control{type: 'text', name: 'q', placeholder: t('documents.search.placeholder_search_input'), value: h(params[:q])}
           .input-group-append
             -#= submit_tag(('<i class="fi fi-search">' + ).html_safe, class: 'btn btn-outline-primary form-control form-control-lg')
-            %button.btn.btn-outline-primary.form-control.form-control-lg{type: 'submit'}
+            %button.btn.btn-outline-primary.input-group-btn{type: 'submit'}
               %i.glyphicon.glyphicon-search
               = t('documents.search.submit')
