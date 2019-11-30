@@ -37,7 +37,7 @@ class DocumentController < ApplicationController
       fulltext params[:q], highlight: true
       with(:accepted, true)
       if (page = params[:page]) and page.respond_to?(:to_i)
-        paginate(page: page.to_i, per_page: 15)
+        paginate(page: page.to_i, per_page: 18)
       end
     end
   end
