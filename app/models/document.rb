@@ -44,25 +44,20 @@ class Document < ApplicationRecord
   def self.order_by(choice=:updated_at_desc)
     choice = (choice || :updated_at_desc).to_sym
     choice = :updated_at_desc unless ordered_choices.has_key?(choice)
-    order(ordered_choices[choice].first)
+    order(ordered_choices[choice])
   end
 
   ##
-  # return a *Hash* with the possible ways to to order the collection Document for a user.
-  # the keys of the *Hash* is the possible choices for the user and the values, an *Array*
-  # at pos 0 is how to order the collection with AR and position 1 describe how it order it for the user
+  # return a *Hash* with the possible ways to order the collection Document for a user.
+  # the keys of the *Hash* is the possible choices for the user and the values, a *Hash*
+  # passed to the method *order()* of *Document*
   def self.ordered_choices
-    @@order_by_choices = {
-      updated_at_desc: [{updated_at: :desc}, I18n.t('documents.index.order_by.updated_at_desc')],
-      updated_at_asc: [{updated_at: :asc}, I18n.t('documents.index.order_by.updated_at_asc')],
-      title_desc: [{title: :desc}, I18n.t('documents.index.order_by.title_desc')],
-      title_asc: [{title: :asc}, I18n.t('documents.index.order_by.title_asc')],
-    }
+    ORDERED_CHOICES
   end
 
   ##
   # For SolR indexing
-  searchable do
+  searchable auto_index: false do
     text :title, stored: true
     text :description, stored: true
     text :doc_asset, stored: true do
@@ -75,7 +70,17 @@ class Document < ApplicationRecord
     doc_asset.content_type == 'application/pdf'
   end
 
+  def index_to_solr
+    SolrIndexJob.perform_later(self)
+  end
   private
+
+  ORDERED_CHOICES = {
+      updated_at_desc: {updated_at: :desc},
+      updated_at_asc: {updated_at: :asc},
+      title_desc: {title: :desc},
+      title_asc: {title: :asc}
+  }
 
   def realized_at_before_today
     return if realized_at.blank?
@@ -93,4 +98,7 @@ class Document < ApplicationRecord
     self.number_of_pages = 0 if number_of_pages.blank?
   end
 
+  def solr_index
+    SolrIndexJob.perform_later(self)
+  end
 end

@@ -132,15 +132,14 @@ en:
       title: "Listing all documents"
       empty: "No documents"
       order_by:
-        updated_at_desc: "the last updated first"
-        updated_at_asc: "the older updated first"
+        updated_at_desc: "latest"
+        updated_at_asc: "oldest"
         title_desc: "title from Z to A"
         title_asc: "title from A to Z"
         submit: "Go!"
         label: "Order by"
       tags:
         label: "Filter by tags"
-        no_filter: "--- No filters ---"
     paginate: "Documents pagination"
     no_description: "No description provided"
     show:
