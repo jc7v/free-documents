@@ -8,7 +8,6 @@
               = link_to '', root_path, class: 'glyphicon glyphicon-home btn btn-outline-secondary form-control form-control-lg'
           %input.form-control{type: 'text', name: 'q', placeholder: t('documents.search.placeholder_search_input'), value: h(params[:q])}
           .input-group-append
-            -#= submit_tag(('<i class="fi fi-search">' + ).html_safe, class: 'btn btn-outline-primary form-control form-control-lg')
             %button.btn.btn-outline-primary.input-group-btn{type: 'submit'}
               %i.glyphicon.glyphicon-search
               = t('documents.search.submit')

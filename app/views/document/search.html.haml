@@ -1,10 +1,10 @@
 %h1
-  = t('documents.search.title', results: @documents.total)
+  = t('documents.search.title', results: @search.total)
 = render 'search_form'
-= prev_next_pagination(@documents.results)
+= prev_next_pagination(@search.results)
 .row
   %ul.row.list-unstyled
-    -@documents.each_hit_with_result do |hit, result|
+    - @search.each_hit_with_result do |hit, result|
       %li.col-lg-6.col-xl-4.border
         .row
           .col-sm-4.col-md-3
@@ -18,4 +18,4 @@
                 %footer.blockquote-footer
                   From the
                   %cite= link_to 'attached file', document_download_path(result)
-= prev_next_pagination(@documents.results)
+= prev_next_pagination(@search.results)

@@ -24,6 +24,9 @@ class DocumentController < ApplicationController
   def show
   end
 
+  ##
+  # before someone download the document, we want to update the *hits* of a document
+  # The number of times it is downloaded
   def download
     @document = Document.find(params[:document_id])
     @document.hits += 1
@@ -31,13 +34,17 @@ class DocumentController < ApplicationController
     redirect_to rails_blob_path(@document.doc_asset, dispositon: :attachment) # TODO: open new tab
   end
 
+  ##
+  # plain text search with solr
+  # *params[:q]* the text to search for
+  # *params[:page]* which page of the result to query. 18 items per page
   def search
     redirect_to root_path if params[:q].blank?
-    @documents = Document.search(include: {doc_asset_attachment: :blob}) do
+    @search = Document.search(include: {doc_asset_attachment: :blob}) do
       fulltext params[:q], highlight: true
       with(:accepted, true)
-      if (page = params[:page]) and page.respond_to?(:to_i)
-        paginate(page: page.to_i, per_page: 18)
+      if (page = params[:page].try(:to_i))
+        paginate(page: page, per_page: 18)
       end
     end
   end
