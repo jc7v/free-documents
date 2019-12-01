@@ -1,4 +1,7 @@
 module ActiveStorage
+
+  ##
+  # Convert to full text a pdf of a blob
   class TextConverter
 
     include ActiveStorage::Downloading

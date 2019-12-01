@@ -38,6 +38,7 @@ class DocumentController < ApplicationController
   # plain text search with solr
   # *params[:q]* the text to search for
   # *params[:page]* which page of the result to query. 18 items per page
+  # TODO: filter by tags and ordering
   def search
     redirect_to root_path if params[:q].blank?
     @search = Document.search(include: {doc_asset_attachment: :blob}) do

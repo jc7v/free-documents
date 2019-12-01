@@ -66,6 +66,8 @@ class Document < ApplicationRecord
     boolean(:accepted) { status == 'accepted' }
   end
 
+  ##
+  # TODO: it would be nicer is the class *ActiveSupport::Blob* like *image?* or *video?*
   def pdf?
     doc_asset.content_type == 'application/pdf'
   end
