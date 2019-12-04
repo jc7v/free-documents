@@ -1,4 +1,4 @@
-= simple_form_for @document, url: document_index_path, method: :post, html: {class: 'row'} do |f|
+= simple_form_for @document, url: (action_name == 'create' ? document_index_path : document_path(@document)), method: (action_name == 'create' ? :post : :put), html: {class: 'row'} do |f|
   .col-lg-6.form-group
     = f.input :title
     .row

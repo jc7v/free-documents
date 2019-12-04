@@ -4,6 +4,8 @@
       = link_to '', :back, class: 'glyphicon glyphicon-menu-left btn btn-outline-secondary'
       = @document.title
       = document_download_icon(@document)
+      %a.text-warning{href: edit_document_path(@document)}
+        %i.glyphicon.glyphicon-edit
   .col-12
     %h5= tags_to_badges(@document)
 .row
@@ -12,7 +14,7 @@
       %dt.col-lg-5.col-md-6.col-sm-12= t('documents.show.author')
       %dd.col-lg-7.col-md-6.col-sm-12= @document.author
       %dt.col-lg-5.col-md-6.col-sm-12= t('documents.show.realized_at')
-      %dd.col-lg-7.col-md-6.col-sm-12= @document.realized_at.to_s(:long)
+      %dd.col-lg-7.col-md-6.col-sm-12= l(@document.realized_at, format: :long)
       %dt.col-lg-5.col-md-6.col-sm-12= t('documents.show.number_of_pages')
       %dd.col-lg-7.col-md-6.col-sm-12= @document.number_of_pages
       %dt.col-lg-5.col-md-6.col-sm-12= t('documents.show.hits')

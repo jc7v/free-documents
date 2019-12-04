@@ -2,7 +2,7 @@ en:
   flash:
     close: "Close"
   application:
-    upload_document: "Upload a document"
+    upload_document: "Upload"
     title: "FreeDocuments"
     login: "Log in"
   devise:
@@ -142,9 +142,18 @@ en:
       title: "Edit: \"%{document}\""
     form:
       doc_asset: "Chosen file"
+    user:
+      title: "Listing of my documents"
+      edit: "Edit"
+    update:
+      notice: "Document successfully updated!"
+    unauthorized: "You are not authorized."
   pagination:
     page: "Page %{page} of %{total_pages}"
     previous: "Previous"
     next: "Next"
   pluralize:
     word: "word"
+  nav:
+    my_documents: "My documents"
+    logout: "Logout"

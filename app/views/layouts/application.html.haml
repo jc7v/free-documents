@@ -9,16 +9,24 @@
     = csrf_meta_tags
   %body
     .container
-      .row
-        .col
-          %nav
-      .row
-        .col.center-block.text-center
-          - unless one_of_actions?(controller: 'document', actions: %w(new edit create update))
+      - if current_user
+        .row
+          .col
+            %nav.navbar.navbar-dark.navbar-expand-md.bg-dark
+              %a.navbar-brand{href: root_path}
+                %i.glyphicon.glyphicon-home
+              %ul.navbar-nav
+                %li.nav-item
+                  = btn_link(t('application.upload_document'), new_document_path, type: 'success', icon: 'plus', outline: false)
+              %ul.navbar-nav.ml-auto
+                %li.nav-item{class: current_page?(document_user_path(current_user)) ? 'active' : ''}
+                  = link_to t('nav.my_documents'), document_user_path(current_user), class: 'nav-link'
+                %li.nav-item
+                  = link_to(('<i class="glyphicon glyphicon-log-out"></i>' + t('nav.logout')).html_safe, destroy_user_session_path, method: :delete, class: 'btn btn-outline-danger')
+      - if current_user.nil?
+        .row.my-1
+          .col.center-block.text-center
             = btn_link(t('application.upload_document'), new_document_path, type: 'success', icon: 'plus')
-          -#%a.btn.btn-success{href: new_document_path}
-          -#  %i.glyphicon.glyphicon-plus
-          -#  =t('application.upload_document')
       .row
         .col-md-12
           -flash.each do |msg_type, msg|
@@ -33,5 +41,5 @@
       .row
         .col
           %footer.text-right
-            - if not current_user or not controller_name == 'sessions'
+            - if current_user.nil? and not controller_name == 'sessions'
               = btn_link(t('application.login'), new_user_session_path, type: 'secondary', icon: 'signin', outline: true)

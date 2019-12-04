@@ -1,7 +1,8 @@
 class DocumentController < ApplicationController
 
-  before_action :find_document, only: [:show]
-  before_action :authenticate_user!, only: [:edit, :create]
+  before_action :find_document, only: [:show, :edit, :update]
+  before_action :authenticate_user!, only: [:edit, :create, :user]
+  before_action :redirect_if_not_owner, only: [:edit, :update]
 
   def index
     @documents = Document
@@ -29,9 +30,7 @@ class DocumentController < ApplicationController
         render 'new'
       end
     else
-      @document = Document.new(params.require(:document)
-                        .permit(:title, :description, :number_of_pages, :author, :realized_at, :doc_asset, tag_ids: [])
-      )
+      @document = Document.new(document_params)
       @document.user = current_user
       if @document.save
         redirect_to root_path, notice: t('documents.created.notice')
@@ -42,7 +41,16 @@ class DocumentController < ApplicationController
   end
 
   def edit
+  end
 
+  def update
+    if @document.update(document_params)
+      @document.status = :refused
+      @document.save
+      redirect_to document_path(@document), notice: t('documents.update.notice')
+    else
+      render 'edit'
+    end
   end
 
   def show
@@ -74,9 +82,24 @@ class DocumentController < ApplicationController
     end
   end
 
+  ##
+  # TODO: move it to the user controller
+  def user
+    @documents = Document.where(user: current_user).page(params[:page]).order(updated_at: :desc)
+  end
+
   private
+
+  def document_params
+    params.require(:document)
+        .permit(:title, :description, :number_of_pages, :author, :realized_at, :doc_asset, tag_ids: [])
+  end
 
   def find_document
     @document = Document.find(params[:id])
+  end
+
+  def redirect_if_not_owner
+    redirect_to root_path, notice: t('documents.unauthorized') unless @document.user == current_user or current_manager
   end
 end

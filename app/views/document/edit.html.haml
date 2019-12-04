@@ -1,3 +1,6 @@
 %h1= t('documents.edit.title', document: @document.title)
+- if action_name == 'edit'
+  .alert.alert-info
+    %p If you edit this documents it will need to be accepted again by an administrator
 
 = render 'form'
