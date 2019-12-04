@@ -1,6 +1,7 @@
 class DocumentController < ApplicationController
 
   before_action :find_document, only: [:show]
+  before_action :authenticate_user!, only: [:edit, :create]
 
   def index
     @documents = Document
@@ -14,11 +15,34 @@ class DocumentController < ApplicationController
 
   def new
     @document = Document.new
-    redirect_to root_path, notice: 'You have to be logged in to upload a document' unless current_user
+    redirect_to new_user_session_path, notice: 'You have to be logged in to upload a document' unless current_user
+
   end
 
   def create
-    @document = Document.new(params.require(:document).permit(:title, :description))
+    if params[:populated]
+      @document = Document.new(params.require(:document).permit(:doc_asset, tag_ids: []))
+      if @document.doc_asset_presence
+        @document.populate_from_asset
+        render 'edit'
+      else
+        render 'new'
+      end
+    else
+      @document = Document.new(params.require(:document)
+                        .permit(:title, :description, :number_of_pages, :author, :realized_at, :doc_asset, tag_ids: [])
+      )
+      @document.user = current_user
+      if @document.save
+        redirect_to root_path, notice: t('documents.created.notice')
+      else
+        render 'edit'
+      end
+    end
+  end
+
+  def edit
+
   end
 
   def show

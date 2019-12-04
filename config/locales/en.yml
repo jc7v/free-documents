@@ -1,30 +1,10 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
-
 en:
   flash:
     close: "Close"
   application:
     upload_document: "Upload a document"
     title: "FreeDocuments"
+    login: "Log in"
   devise:
     confirmations:
       confirmed: "Your email address has been successfully confirmed."
@@ -124,10 +104,12 @@ en:
   documents:
     new:
       title: "Upload a new document"
+      hint:
+        doc_asset: "Preferred formats are PDF with text, because we will try to extract information from the uploaded file. The next step will ask you to complete/correct these information"
     errors:
       realized_at: "This document cannot have been realized in the future"
       doc_asset:
-        presence: "A file is required to upload"
+        presence: "A file is mandatory"
     index:
       title: "Listing all documents"
       empty: "No documents"
@@ -154,6 +136,12 @@ en:
       title: "%{results} results for:"
       submit: "Search"
       placeholder_search_input: "Search in the documents and in their attached files. It works!"
+    created:
+      notice: "Document successfully created. It has to be approven before to be publicly visible"
+    edit:
+      title: "Edit: \"%{document}\""
+    form:
+      doc_asset: "Chosen file"
   pagination:
     page: "Page %{page} of %{total_pages}"
     previous: "Previous"

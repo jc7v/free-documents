@@ -62,4 +62,22 @@ module ApplicationHelper
   def highlight_solr(hit, result, what)
     hit.highlight(what).try(:format) {|word| "<tt class='bg-warning'>#{h(word)}</tt>"}.try(:html_safe) || result.try(what)
   end
+
+  ##
+  # display a link formatted as a button with a possible icon a the left of the text
+  def btn_link(text, path, type: 'primary', icon: '', outline: false)
+    i = ''
+    btn_outline = ''
+    btn_outline = '-outline' if outline
+    i = "<i class='glyphicon glyphicon-#{icon}'></i>" unless icon.blank?
+    "<a href='#{h(path)}' class='btn btn#{btn_outline}-#{type}'>#{i} #{text}</a>".html_safe
+  end
+
+  ##
+  # return true if *controller* == the name of the current controller and the current
+  # action is any of the element in *with*
+  # false otherwise
+  def one_of_actions?(controller: '', actions: [])
+    controller_name == controller and actions.any? { |action| action == action_name}
+  end
 end

@@ -18,12 +18,6 @@ class Document < ApplicationRecord
   }
 
   ##
-  # find all documents with the status accepted
-  scope :accepted, -> {
-    where(status: :accepted)
-  }
-
-  ##
   # Find all documents associated to any of the given tags
   # *ids* is an array of ids corresponding to the tags to search for
   # Actually, it find all the documents associated at least with one of the tags
@@ -61,7 +55,7 @@ class Document < ApplicationRecord
     text :title, stored: true
     text :description, stored: true
     text :doc_asset, stored: true do
-      ActiveStorage::TextConverter.new(doc_asset.blob).to_s if pdf?
+      ActiveStorage::PdfReader.new(doc_asset.blob).to_s if pdf?
     end
     boolean(:accepted) { status == 'accepted' }
   end
@@ -75,6 +69,44 @@ class Document < ApplicationRecord
   def index_to_solr
     SolrIndexJob.perform_later(self)
   end
+
+  def doc_asset_presence
+    unless self.doc_asset.attached?
+      errors.add(:doc_asset, I18n.t('documents.errors.doc_asset.presence'))
+      return false
+    end
+    true
+  end
+
+  ##
+  # Try to extract as much content from the uploaded file
+  # TODO: manage different encoding formats
+  def populate_from_asset
+    if pdf?
+      ActiveStorage::PdfReader.new(doc_asset.blob).reader do |reader|
+        self.title = reader.info[:Title] || doc_asset.blob.filename
+        self.description = reader.pages.first.text[0..500].gsub(/\s{2,}/, '')
+        self.author = reader.info[:Author]
+        unless (pdf_date = reader.info[:CreationDate]).blank?
+          date = Date.strptime(pdf_date, 'D:%Y%m%d')
+          self.realized_at = date if date < Date.today
+        end
+        self.number_of_pages = reader.pages.size
+      end
+    else
+      self.title = doc_asset.blob.file_name
+    end
+  end
+
+  ##
+  # Search if ii exists similar documents
+  # Actually only based on the title
+  def similar_documents
+    Document.search do
+      fulltext self.title
+    end
+  end
+
   private
 
   ORDERED_CHOICES = {
@@ -92,15 +124,7 @@ class Document < ApplicationRecord
     end
   end
 
-  def doc_asset_presence
-    errors.add(:doc_asset, I18n.t('documents.errors.doc_asset.presence')) unless self.doc_asset.attached?
-  end
-
   def set_number_of_pages_to_0
     self.number_of_pages = 0 if number_of_pages.blank?
-  end
-
-  def solr_index
-    SolrIndexJob.perform_later(self)
   end
 end

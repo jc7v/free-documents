@@ -1,3 +1,8 @@
 %h1= t 'documents.new.title'
 
-= render 'form'
+= simple_form_for @document, url: document_index_path, method: :post, html: {class: ''} do |f|
+  = hidden_field_tag :populated, true
+  = f.input :doc_asset, label: false, hint: t('documents.new.hint.doc_asset'), error: f.error(:doc_asset)
+  -#= f.error :doc_asset
+  = f.association :tags, input_html: {class: 'tags-select2'}, label: 'Choose tags to correctly classify the document'
+  = f.submit class: 'btn-outline-success'
