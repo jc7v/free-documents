@@ -24,7 +24,7 @@
                 %li.nav-item
                   = link_to(('<i class="glyphicon glyphicon-log-out"></i>' + t('nav.logout')).html_safe, destroy_user_session_path, method: :delete, class: 'btn btn-outline-danger')
       - if current_user.nil?
-        .row.my-1
+        .row.mb-2.position-sticky
           .col.center-block.text-center
             = btn_link(t('application.upload_document'), new_document_path, type: 'success', icon: 'plus')
       .row

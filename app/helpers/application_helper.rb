@@ -10,7 +10,7 @@ module ApplicationHelper
   # return an image as a prview of the document.
   # If no preview are available, return an unkonw logo
   def preview_document(asset)
-    return if asset.attachment.nil?
+    return asset_url('unknow.png') if asset.attachment.nil?
     return asset.variant(resize: '450x300') if asset.variable?
     return asset if asset.image?
     return asset.preview(resize: '300x200') if asset.previewable?
