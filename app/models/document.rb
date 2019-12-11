@@ -83,23 +83,28 @@ class Document < ApplicationRecord
   # TODO: manage different encoding formats
   def populate_from_asset
     if pdf?
-      ActiveStorage::PdfReader.new(doc_asset.blob).reader do |reader|
-        self.title = reader.info[:Title] || doc_asset.blob.filename
-        self.description = reader.pages.first.text[0..500].gsub(/\s{2,}/, '')
-        self.author = reader.info[:Author]
-        unless (pdf_date = reader.info[:CreationDate]).blank?
-          date = Date.strptime(pdf_date, 'D:%Y%m%d')
-          self.realized_at = date if date < Date.today
-        end
-        self.number_of_pages = reader.pages.size
+      begin
+          ActiveStorage::PdfReader.new(doc_asset.blob).reader do |reader|
+            self.title = reader.info[:Title] || doc_asset.blob.filename
+            self.description = reader.pages.first.text[0..500].gsub(/\s{2,}/, '')
+            self.author = reader.info[:Author]
+            unless (pdf_date = reader.info[:CreationDate]).blank?
+              date = Date.strptime(pdf_date, 'D:%Y%m%d')
+              self.realized_at = date if date < Date.today
+            end
+            self.number_of_pages = reader.pages.size
+          end
+      rescue PDF::Reader::MalformedPDFError
+        self.title = doc_asset.blob.filename
       end
     else
-      self.title = doc_asset.blob.file_name
+      self.title = doc_asset.blob.filename
     end
+    self.title = 'Unknow title' if self.title.empty?
   end
 
   ##
-  # Search if ii exists similar documents
+  # Search if it exists similar documents
   # Actually only based on the title
   def similar_documents
     Document.search do

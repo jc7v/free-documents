@@ -33,6 +33,6 @@
             = link_to image_tag(preview_document(doc.doc_asset), class: 'img-thumbnail'), document_path(doc)
           .col-sm-8.col-md-9
             %p
-              = doc.description .truncate(120, separator: ' ') || t('documents.no_description')
+              = doc.description.try(:truncate, 120, separator: ' ') || t('documents.no_description')
             %h5= tags_to_badges(doc)
 = prev_next_pagination(@documents)
