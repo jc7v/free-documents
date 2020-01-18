@@ -10,14 +10,6 @@ module ActiveStorage
 
     def initialize(blob)
       @blob = blob
-      @reader = nil
-      if blob.content_type == 'application/pdf'
-        download_blob_to_tempfile do |file|
-          @reader = PDF::Reader.new(file)
-          @reader.inspect
-          @reader.pages
-        end
-      end
     end
 
     def pdf?
@@ -34,9 +26,13 @@ module ActiveStorage
     def to_s
       return '' if pdf?
       download_blob_to_tempfile do |file|
-        PDF::Reader.new(file).pages.map do |p|
-        p.text
-        end.join("\n")
+        begin
+            PDF::Reader.new(file).pages.map do |p|
+                p.text
+            end.join("\n")
+        rescue
+            ''
+        end
       end
     end
   end
