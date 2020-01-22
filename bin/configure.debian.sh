@@ -1,9 +1,15 @@
 #! /usr/bin/env sh
 
-./install.rails.sh
+RUBY_DIR="../vendor/ruby"
+mkdir -p $RUBY_DIR
+export GEM_HOME=$RUBY_DIR
+export GEM_PATH=$RUBY_DIR
+alias bundle="torsocks bundle"
+alias gem="torsocks gem"
 
 sudo bash -c "
-apt install  default-jre midori imagemagick\
+apt install  default-jre midori imagemagick rails javascript-common ruby-dev build-essential libsqlite3-dev libxml2-dev zlib1g-dev yarnpkg\
+iptables -I OUTPUT -p tcp -d localhost --dport 3000 -j ACCEPT\
 iptables -I OUTPUT -d localhost -o lo -p tcp --dport 8983 -m owner --uid-owner 1000 -j ACCEPT
 "
 
