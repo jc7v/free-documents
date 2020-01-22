@@ -1,4 +1,5 @@
 require "application_system_test_case"
+include Devise::Test::IntegrationHelpers
 
 class DocumentsTest < ApplicationSystemTestCase
   setup do
@@ -7,12 +8,13 @@ class DocumentsTest < ApplicationSystemTestCase
 
   test "visiting the index" do
     visit root_url
-    assert_selector "h1", text: "Documents"
+    assert_selector "h1", text: "Listing all documents"
   end
 
   test "creating a Document" do
-    visit documents_url
-    click_on "New Document"
+    visit root_url
+    sign_in users(:user1)
+    click_on "Upload"
 
     click_on "Create Document"
 

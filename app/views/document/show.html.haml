@@ -4,8 +4,13 @@
       = link_to '', :back, class: 'glyphicon glyphicon-menu-left btn btn-outline-secondary'
       = @document.title
       = document_download_icon(@document)
-      %a.text-warning{href: edit_document_path(@document)}
-        %i.glyphicon.glyphicon-edit
+      - if current_user == @document.user
+        %a.text-warning{href: edit_document_path(@document)}
+          %i.glyphicon.glyphicon-edit
+      - if current_manager
+        -#TODO: link to the edition of document iin the admin interface
+        = link_to 'Manage', rails_admin_path
+
   .col-12
     %h5= tags_to_badges(@document)
 .row

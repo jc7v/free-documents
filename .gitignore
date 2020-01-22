@@ -22,7 +22,15 @@
 .idea/*
 .rake_task*
 storage/
-/solr
+/solr/default
+/solr/development
+/solr/pids
+/solr/production
+/solr/test
+/config/credentials.yml.enc
+/node_modules/
+/public/assets/
+yarn.lock
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key

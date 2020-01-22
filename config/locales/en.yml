@@ -5,6 +5,7 @@ en:
     upload_document: "Upload"
     title: "FreeDocuments"
     login: "Log in"
+    admin: "Documents administration"
   devise:
     confirmations:
       confirmed: "Your email address has been successfully confirmed."
