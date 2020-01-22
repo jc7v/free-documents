@@ -6,7 +6,7 @@ ruby '2.5.5'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.2', '>= 5.2.2.1'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+gem 'sqlite3', '1.4.1'
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Use SCSS for stylesheets
@@ -37,22 +37,23 @@ gem 'bcrypt', '~> 3.1.7'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
-gem 'haml-rails'
+gem 'haml-rails', '2.0.1'
 gem 'bootstrap', '~> 4.3.1'
-gem 'simple_form'
-gem 'devise'
-gem 'rails_admin'
-gem 'kaminari'
-gem 'select2-rails'
+gem 'simple_form', '5.0.1'
+gem 'devise', '4.7.1'
+gem 'rails_admin', '2.0.0'
+gem 'kaminari', '1.1.1'
+gem 'select2-rails', '4.0.3'
 # gem 'mysql2',          '~> 0.3'
 # gem 'thinking-sphinx', '~> 4.4'
-gem 'sunspot_rails'
-gem 'pdf-reader'
+gem 'sunspot_rails', '2.5.0'
+gem 'pdf-reader', '2.4.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'faker'
+  gem 'faker', '2.7.0'
+  gem 'sunspot_solr', '2.5.0'
 end
 
 group :development do
@@ -60,10 +61,9 @@ group :development do
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+  gem 'spring', '2.1.0'
   gem 'spring-watcher-listen', '~> 2.0.0'
-  gem 'sunspot_solr'
-  gem 'progress_bar'
+  gem 'progress_bar', '1.3.0'
 end
 
 group :test do

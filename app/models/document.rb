@@ -6,6 +6,7 @@ class Document < ApplicationRecord
   enum status: [:refused, :accepted]
 
   before_validation :set_number_of_pages_to_0
+  after_commit :index_to_solr
 
   validates_presence_of :title
   validates :number_of_pages, numericality: {greater_than_or_equal_to: 0}
@@ -66,6 +67,8 @@ class Document < ApplicationRecord
     doc_asset.content_type == 'application/pdf'
   end
 
+  ##
+  # called by the *after_commit* hook for indexing to SolR
   def index_to_solr
     SolrIndexJob.perform_later(self)
   end
