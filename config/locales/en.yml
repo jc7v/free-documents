@@ -149,6 +149,8 @@ en:
     update:
       notice: "Document successfully updated!"
     unauthorized: "You are not authorized."
+    model:
+      unknown_title: "Unknown title"
   pagination:
     page: "Page %{page} of %{total_pages}"
     previous: "Previous"

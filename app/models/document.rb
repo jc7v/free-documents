@@ -6,6 +6,7 @@ class Document < ApplicationRecord
   enum status: [:refused, :accepted]
 
   before_validation :set_number_of_pages_to_0
+  after_save :set_file_name
 
   validates_presence_of :title
   validates :number_of_pages, numericality: {greater_than_or_equal_to: 0}
@@ -66,10 +67,14 @@ class Document < ApplicationRecord
     doc_asset.content_type == 'application/pdf'
   end
 
+  ##
+  # Start a job for indexing to SolR
   def index_to_solr
     SolrIndexJob.perform_later(self)
   end
 
+  ##
+  # Check if a file is uploaded
   def doc_asset_presence
     unless self.doc_asset.attached?
       errors.add(:doc_asset, I18n.t('documents.errors.doc_asset.presence'))
@@ -80,14 +85,13 @@ class Document < ApplicationRecord
 
   ##
   # Try to extract as much content from the uploaded file
-  # TODO: manage different encoding formats
   def populate_from_asset
     if pdf?
       begin
           ActiveStorage::PdfReader.new(doc_asset.blob).reader do |reader|
-            self.title = reader.info[:Title] || doc_asset.blob.filename
-            self.description = reader.pages.first.text[0..500].gsub(/\s{2,}/, '')
-            self.author = reader.info[:Author]
+            self.title = convert_to_utf_8(reader.info[:Title] || doc_asset.blob.filename)
+            self.description = convert_to_utf_8(reader.pages.first.text[0..500].gsub(/\s{2,}/, ''))
+            self.author = convert_to_utf_8(reader.info[:Author])
             unless (pdf_date = reader.info[:CreationDate]).blank?
               date = Date.strptime(pdf_date, 'D:%Y%m%d')
               self.realized_at = date if date < Date.today
@@ -100,7 +104,7 @@ class Document < ApplicationRecord
     else
       self.title = doc_asset.blob.filename
     end
-    self.title = 'Unknow title' if self.title.empty?
+    self.title = I18n.t('documents.model.unknown_title') if self.title.empty?
   end
 
   ##
@@ -113,6 +117,21 @@ class Document < ApplicationRecord
   end
 
   private
+
+  ##
+  # After each save, set the value of *title* to the name of the attached file
+  def set_file_name
+    doc_asset.blob.filename = title
+    doc_asset.blob.save
+  end
+
+  ##
+  # Determine the encoding of the *string* and from that init a Converter and convert the *string* to UTF-8
+  def convert_to_utf_8(string)
+    return if string.encoding == Encoding::UTF_8
+    encoder = Encoding::Converter.new(string.encoding, Encoding::UTF_8, undef: :replace)
+    encoder.convert(string)
+  end
 
   ORDERED_CHOICES = {
       updated_at_desc: {updated_at: :desc},

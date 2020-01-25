@@ -141,4 +141,14 @@ class DocumentTest < ActiveSupport::TestCase
     add_tags_and_save(d1, [tags.first])
     assert_same_elements docs << d1, Document.filter_by_tags(to_ids(tags))
   end
+
+  test 'The filename is equal to the title' do
+    d = documents(:doc1)
+    attach_asset_to(d)
+    d.save
+    assert_equal(d.reload.doc_asset.blob.filename, d.title)
+    d.reload.title = 'qqq'
+    d.save
+    assert_equal(d.reload.doc_asset.blob.filename, d.title)
+  end
 end
