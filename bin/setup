@@ -4,13 +4,20 @@ include FileUtils
 
 # path to your application root.
 APP_ROOT = File.expand_path('..', __dir__)
+RUBY_VENDOR = File.join(APP_ROOT, 'vendor', 'cache') 
+SOLR_VERSION = 8.4.1
+SOLR_NAME = 'solr-' + SOLR_VERSION
+SOLR_PATH = File.join(APP_ROOT, '..', SOLR_NAME)
 
 def system!(*args)
   system(*args) || abort("\n== Command #{args} failed ==")
 end
 
-RUBY_VENDOR = File.join(APP_ROOT, 'vendor', 'cache') 
 
+##
+# bundle command with ENV variable *GEM_HOME* for custom install
+# and do that bundle go through tor.
+# *command* is one of the *bundle command*
 def tails_bundle(command)
   "GEM_HOME='#{RUBY_VENDOR}' torsocks bundle #{command}"
 end
@@ -27,12 +34,12 @@ chdir APP_ROOT do
     ENV['GEM_HOME'] = RUBY_VENDOR
     system("bundle config set path='#{RUBY_VENDOR}'")
     ip_rules = [
-     "iptables -I OUTPUT -d localhpst -o localhost -p tcp --dport #{app_port} -m owner --uid-owner 1000 -j ACCEPT"
-     "iptables -I OUTPUT -d localhpst -o localhost -p tcp --dport #{solr_port} -m owner --uid-owner 1000 -j ACCEPT"
+     "iptables -I OUTPUT -d localhost -o localhost -p tcp --dport #{app_port} -m owner --uid-owner 1000 -j ACCEPT"
+     "iptables -I OUTPUT -d localhost -o localhost -p tcp --dport #{solr_port} -m owner --uid-owner 1000 -j ACCEPT"
     ]
     ip_rules << "iptables -I INPUT -p tcp --dport #{app_port} -s #{input_ips} -j ACCEPT"
     deb_pkg = %(default-jre midori imagemagick rails javascript-common ruby-dev
-    build-essential libsqlite3-dev libxml2-dev zlib1g-dev yarnpkg)
+    build-essential libsqlite3-dev libxml2-dev zlib1g-dev yarnpkg unzip)
     
     puts "\n== Installing required deb packages =="
     system!("sudo bash -c 'apt install -y #{deb_pkg.join(' ')}\n#{ip_rules.join("\n")}'")
@@ -40,9 +47,29 @@ chdir APP_ROOT do
     puts '== Installing dependencies =='
     system(tails_bundle('check')) || system!(tails_bundle('install'))
     
+    if Dir.exists?(SOLR_PATH)
+      puts "/n Solr #{SOLR_VERSION} is installed at path: #{SOLR_PATH}"
+    else
+      mkdir_p(SOLR_PATH)
+      chdir File.join(SOLR_PATH, '..') do
+        puts "/n Downloading solr"
+        system! "wget 'https://www-eu.apache.org/dist/lucene/solr/#{SOLR_VERSION}/#{SOLR_NAME}.zip'"
+        system! "wget 'https://www.apache.org/dist/lucene/solr/#{SOLR_VERSION}/#{SOLR_NAME}.zip.asc'"
+        # system! "gpg --verify #{SOLR_NAME}.zip.asc #{SOLR_NAME}.zip"
+        system! "unzip #{SOLR_NAME}.zip"
+        puts "\n Solr version #{SOLR_VERSION} is installed at #{SOLR_PATH} and not gpg sig verified"
+      end
+    end
+
+    puts "\n== Starting Solr =="
+    system("#{File.join(SOLR_PATH), 'bin', 'solr'} start")
+
+    puts "\n == Compiling assets =="
+    system!('bin/rails assets:precompile')
+
     puts("\n == Firewall config ==")
     puts("Opened the ports #{app_port} and #{solr_port} in the OUTPUT table of the firewall to localhost")
-    puts("The app is accessible from the ips #{inputs_ips} and localhost on port #{app_port}")
+    puts("The app is accessible from the ips #{inputs_ips} and from localhost on port #{app_port}")
   end
 
  # puts '== Installing dependencies =='
@@ -57,8 +84,6 @@ chdir APP_ROOT do
   #   cp 'config/database.yml.sample', 'config/database.yml'
   # end
 
-  puts "\n == Compiling assets =="
-  system!('bin/rails assets:precompile')
 #
 #  puts "\n== Preparing database =="
 #  system!('bin/rails db:create')
