@@ -3,6 +3,11 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 
 module MiniTest::Assertions
+
+  def pdf_for_test
+    File.expand_path('../fixtures/files/test.pdf', __FILE__ )
+  end
+
   ##
   # Fails unless **exp** and *act* are both arrays and
   # contain the same elements.
