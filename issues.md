@@ -1,20 +1,26 @@
 # Issues
 
-## 4. ~~Extracting informations from PDF lead sometimes to encoding
-problems~~
+## 14. Order by title and updated when searching with SolR
 
-*high
-*bug
+* enhancement
 
-## 5. ~~Double navbar when an admin and an user logged in on the same
-sessionm~~
+-> 1.0
+
+Need to check the solr doc
+
+## 4. ~~Extracting information from PDF lead sometimes to encoding problems~~
+
+* high
+* bug
+
+## 5. ~~Double navbar when an admin and an user logged in on the same session~~
 
 * high
 * bug
 
 -> 1.0
 
-## 6. Filter the search by tags
+## ~~6. Filter the search by tags~~
 
 * enhancement
 
@@ -64,10 +70,9 @@ Use direct upload. It also work without but it is less user friendly
 * enhancement
 * middle
 
-Not required for production release but would help a lot users to use
-the search bar
+Not required for production release but would boost the use of the search bar
 
-## 13. Investigate for automatci OCR of uploaded document
+## 13. Investigate for automatic OCR of uploaded document
 
 * research
 
