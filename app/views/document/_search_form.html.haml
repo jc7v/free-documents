@@ -1,8 +1,8 @@
 .row
   .col-12
     = form_tag(search_document_index_path, method: :get, enforce_utf8: false) do
-      = hidden_field_tag 'tag_ids[]', params[:tag_ids]
-      = hidden_field_tag :order_by, params[:order_by]
+      = hidden_field_tag 'tag_ids[]', params[:tag_ids] if params[:tag_ids].try(:any?)
+      = hidden_field_tag :order_by, params[:order_by] if params[:order_by].present?
       .form-group
         .input-group.input-group-lg
           - if not current_page? root_path

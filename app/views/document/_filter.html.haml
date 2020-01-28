@@ -12,6 +12,6 @@
           %select.form-control.tags-select2{id: 'tag_ids', name: 'tag_ids[]', multiple: 'multiple'}
             - Tag.all.each do |tag|
               %option{value: tag.id, selected: tag_selected?(tag) }= h(tag.name)
-        = hidden_field_tag('q', params[:q])
+        = hidden_field_tag('q', params[:q]) if params[:q].present?
         .col-sm-1
           %input.btn.btn-outline-secondary{type: 'submit', value: t('documents.index.order_by.submit')}

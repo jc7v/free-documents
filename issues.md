@@ -1,8 +1,15 @@
 # Issues
 
+## 15. Simplify the interface for filtering by tags with a SolR search
+
+* wouldo
+
+For now, there is one button for full text search and one button for filtering. Only one 
+button for the both would be better. Needs a bit of changing the interface and code refactoring
+
 ## 14. Order by title and updated when searching with SolR
 
-* enhancement
+* mustdo
 
 -> 1.0
 
@@ -28,7 +35,7 @@ Need to check the solr doc
 
 ## 7. Add new languages
 
-* enhancement
+* shouldo
 
 -> 1.0
 
@@ -36,7 +43,7 @@ It would be great to have the app translated in other languages
 
 ## 8. Simple setup
 
-* enhancement
+* mustdo
 
 -> 1.0
 
@@ -45,7 +52,7 @@ app with different options under different OS
 
 ## 9. Have a complete test suite
 
-* enhancement
+* mustdo
 
 -> 1.0
 
@@ -54,27 +61,28 @@ smooth security update and a complete app description
 
 ## ~~10. Download the document by clicking on his preview~~
 
-* enhancement
+* mustdo
 
 -> 1.0
 
 ## 11. Upload directly a document with a progress bar
 
 * enhancement
-* low
+* wouldo
 
 Use direct upload. It also work without but it is less user friendly
 
 ## 12. Enable suggestion when searching
 
 * enhancement
-* middle
+* wouldo
 
 Not required for production release but would boost the use of the search bar
 
 ## 13. Investigate for automatic OCR of uploaded document
 
 * research
+*couldo
 
 It would be great to have automatic OCR on uploadede document with user
 selecting text boxes when needed. Have a look to tesseract-js.
