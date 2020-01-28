@@ -60,6 +60,9 @@ class Document < ApplicationRecord
       ActiveStorage::PdfReader.new(doc_asset.blob).to_s if pdf?
     end
     boolean(:accepted) { status == 'accepted' }
+    integer :tag_ids, multiple: true do
+      tags.map {|t| t.id}
+    end
   end
 
   ##
