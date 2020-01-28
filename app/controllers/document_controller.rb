@@ -73,10 +73,10 @@ class DocumentController < ApplicationController
   # TODO: filter by tags and ordering
   def search
     redirect_to root_path if params[:q].blank?
-    @search = Document.search(include: {doc_asset_attachment: :blob}) do
+    @search = Document.search(include: [{doc_asset_attachment: :blob}, :tags]) do
       fulltext params[:q], highlight: true
       with(:accepted, true)
-      with(tag_ids, params[:tag_ids]) if params[:tag_ids].is_a? Array
+      with(:tag_ids, params[:tag_ids]) if params[:tag_ids].is_a? Array
       if (page = params[:page].try(:to_i))
         paginate(page: page, per_page: 18)
       end

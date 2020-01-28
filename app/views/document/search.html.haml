@@ -1,6 +1,7 @@
 %h1
   = t('documents.search.title', results: @search.total)
 = render 'search_form'
+= render 'filter', action_path: search_document_index_path
 = prev_next_pagination(@search.results)
 .row
   %ul.row.list-unstyled
@@ -11,6 +12,7 @@
             = link_to image_tag(preview_document(result.doc_asset), class: 'img-thumbnail'), result
           .col-sm-8.col-md-9
             %h4.overflow-hidden= link_to highlight_solr(hit, result, :title), result
+            %h5= tags_to_badges(result)
             %p.overflow-hidden= highlight_solr(hit, result, :description)
             -if phrase = hit.highlight(:doc_asset)
               %blockquote.blockquote
