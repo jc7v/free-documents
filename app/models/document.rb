@@ -41,7 +41,7 @@ class Document < ApplicationRecord
     order(ordered_choices[ensure_choice_is_allowed(choice)])
   end
 
-  def ensure_choice_is_allowed(choice=:updated_at)
+  def self.ensure_choice_is_allowed(choice=:updated_at)
     choice = (choice || :updated_at_desc).to_sym
     return :updated_at_desc unless ordered_choices.has_key?(choice)
     choice
