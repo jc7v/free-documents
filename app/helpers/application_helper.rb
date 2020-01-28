@@ -70,7 +70,7 @@ module ApplicationHelper
     btn_outline = ''
     btn_outline = '-outline' if outline
     i = "<i class='glyphicon glyphicon-#{icon}'></i>" unless icon.blank?
-    "<a href='#{h(path)}' class='btn btn#{btn_outline}-#{type}'>#{i} #{text}</a>".html_safe
+    "<a href='#{h(path)}' class='btn btn#{btn_outline}-#{type}'>#{i} #{h(text)}</a>".html_safe
   end
 
   ##

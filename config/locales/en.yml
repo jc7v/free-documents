@@ -5,7 +5,7 @@ en:
     upload_document: "Upload"
     title: "FreeDocuments"
     login: "Log in"
-    admin: "Documents administration"
+    admin: "Administrate"
   devise:
     confirmations:
       confirmed: "Your email address has been successfully confirmed."
@@ -149,6 +149,8 @@ en:
     update:
       notice: "Document successfully updated!"
     unauthorized: "You are not authorized."
+    model:
+      unknown_title: "Unknown title"
   pagination:
     page: "Page %{page} of %{total_pages}"
     previous: "Previous"

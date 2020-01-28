@@ -1,7 +1,9 @@
 require "application_system_test_case"
-include Devise::Test::IntegrationHelpers
+# include Devise::Test::IntegrationHelpers
 
 class DocumentsTest < ApplicationSystemTestCase
+  include Devise::Test::IntegrationHelpers
+
   setup do
     @document = documents(:doc1)
   end
@@ -15,15 +17,25 @@ class DocumentsTest < ApplicationSystemTestCase
     visit root_url
     sign_in users(:user1)
     click_on "Upload"
-
+    attach_file  pdf_for_test
     click_on "Create Document"
+    assert_text 'Edit:'
+    click_on "Create Document"
+    assert_text 'Document successfully created'
+  end
 
-    assert_text "Document was successfully created"
-    click_on "Back"
+  test 'List all documents uploaded by the current user' do
+    user = users(:user1)
+    sign_in user
+    d = documents(:doc1)
+    visit document_user_path(d.id)
   end
 
   test "updating a Document" do
-    visit documents_url
+    user = users(:user1)
+    sign_in user
+    d = documents(:doc1)
+    visit document_user_path(d.id)
     click_on "Edit", match: :first
 
     click_on "Update Document"

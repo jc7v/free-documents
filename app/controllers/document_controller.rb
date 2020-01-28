@@ -76,6 +76,7 @@ class DocumentController < ApplicationController
     @search = Document.search(include: {doc_asset_attachment: :blob}) do
       fulltext params[:q], highlight: true
       with(:accepted, true)
+      with(tag_ids, params[:tag_ids]) if params[:tag_ids].is_a? Array
       if (page = params[:page].try(:to_i))
         paginate(page: page, per_page: 18)
       end
