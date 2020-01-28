@@ -6,7 +6,7 @@ class CreateDocuments < ActiveRecord::Migration[5.2]
       t.string :author
       t.integer :number_of_pages
       t.date :realized_at
-      t.integer :hits
+      t.integer :hits, default: 0
       t.integer :status, default: 0
       t.references :user, index: true, foreign_key: true
 

@@ -5,4 +5,4 @@
   = f.input :doc_asset, label: false, hint: t('documents.new.hint.doc_asset'), error: f.error(:doc_asset)
   -#= f.error :doc_asset
   = f.association :tags, input_html: {class: 'tags-select2'}, label: 'Choose tags to correctly classify the document'
-  = f.submit class: 'btn-outline-success'
+  = f.submit class: 'btn btn-outline-success'
