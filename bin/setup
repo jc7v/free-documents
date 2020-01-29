@@ -42,7 +42,7 @@ def ip_rules(app_port: 3000, solr_port: 8983, input: true, input_ips: '192.168.0
       "iptables -I OUTPUT -d localhost -p tcp --dport #{solr_port} -m owner --uid-owner 1000 -j ACCEPT"
   ]
   rules << "iptables -I INPUT -p tcp --dport #{app_port} -s #{input_ips} -j ACCEPT" if input
-  rules.join("/n")
+  rules.join("\n")
 end
 
 def deb_pkg(add_pkg = [])
@@ -81,8 +81,7 @@ def parse_options
       solr_port: 8983
   }
   tails_options_msg = <<HEREDOC
-Please Note:
-with options --tails the following options are sets to: 
+Please Note: with the option --tails the following options are sets to: 
   --firewall true
   --deb_pkg true
   --ruby_vendor true
@@ -95,34 +94,40 @@ HEREDOC
       args[:deb_pkg] = true
       args[:ruby_vendor] = true
     end
-    opts.on('-l', '--open_inputBOOLEAN', "Open the INPUT table of the firewall with default ips #{args[:input_ips]}
-true|false [false]. options --firewall true enabled") do |bool|
+    opts.on('-o', '--open_input [BOOLEAN]', FalseClass, "Open the INPUT table of the firewall with default ips #{args[:input_ips]} [false]. options --firewall true enabled") do |bool|
       args[:input] = bool
     end
-    opts.on('-iI', '--input_ipsIPS', "Open the INPUT table of the firewall for the IPS [#{args[:input_ips]}]") do |ips|
+    opts.on('-i', '--input_ips [IPS]', "Open the INPUT table of the firewall for the IPS [#{args[:input_ips]}]") do |ips|
       args[:input_ips] = ips
+      args[:input] = true
     end
-    opts.on('-a', '--app_portPORT', "The app server will be started on port PORT [#{args[:app_port]}]") do |p|
+    opts.on('-a', '--app_port [PORT]', Integer, "The app server will be started on port PORT [#{args[:app_port]}]") do |p|
       args[:app_port] = p
     end
-    opts.on('-s', '--solr_portPORT', "The solr server will be started on port PORT [#{args[:app_port]}]") do |p|
+    opts.on('-s', '--solr_port [PORT]', Integer, "The solr server will be started on port PORT [#{args[:app_port]}]") do |p|
       args[:solr_port] = p
     end
     opts.on('-x', '--no_solr_install', "Do not Install Solr") do
       args[:no_solr] = true
     end
-    opts.on('-f', '--firewallBOOLEAN' 'Configure the firewall to allow traffic to the app true|false [false]') do |bool|
+    opts.on('-f', '--firewall [BOOLEAN]', FalseClass, 'Open the OUTPUT table of the firewall to allow access of the app and solr under localhost [false]') do |bool|
       args[:firewall] = bool
     end
-    opts.on('-d', '--deb_pkgBOOLEAN', 'Install the required deb packages true|false [false]') do |bool|
+    opts.on('-d', '--deb_pkg [BOOLEAN]', FalseClass, 'Install the required deb packages [false]') do |bool|
       args[:deb_pkg] = bool
     end
-    opts.on('-r', '--ruby_vendorBOOLEAN', 'Package the ruby gems into vendor/ dir and download them under Tor true|false [false]') do |bool|
+    opts.on('-r', '--ruby_vendor [BOOLEAN]', FalseClass, 'Package the ruby gems into vendor/ dir and download them under Tor [false]') do |bool|
       args[:ruby_vendor] = bool
     end
     opts.on('-h', '--help', 'Print the help message') do
       puts opts
-      puts tails_options_msg
+      puts "\n" + tails_options_msg
+      exit
+    end
+    opts.on('-v', '--version', 'Print the version of the app you will install') do
+      git_branch = `git branch --show-current`
+      puts "Wou will install the app version: #{git_branch}"
+      puts "(Based on the git branch which should be the same name as the git tag corresponding to a release)"
       exit
     end
   end.parse!
@@ -136,21 +141,24 @@ chdir APP_ROOT do
 
   args = parse_options
 
-  p args
-  exit
   prepare_ruby_vendor if args[:ruby_vendor]
 
-  apt_install = args[:deb_pkg] ? 'apt install -y ' + deb_pkg : ''
-  firewall_config = (args[:firewall] or args[:input]) ? ip_rules(args) : ''
-
-  if apt_install.length > 0 or firewall_config.length > 0
+  if args[:deb_pkg] or args[:firewall] or args[:input]
     puts "\n== Installing required deb packages and/or configuring firewall =="
-    system!("sudo bash -c '#{apt_install}\n#{firewall_config}'")
+    apt_install = (args[:deb_pkg] ? 'apt install -y ' + deb_pkg : '')
+    firewall_config = ''
+    if args[:firewall] or args[:input]
+      firewall_config = ip_rules(
+          app_port: args[:app_port], solr_port: args[:solr_port], input: args[:input], input_ips: args[:input_ips]
+      )
+    end
+    puts("sudo bash -c '#{apt_install}\n#{firewall_config}'")
+    exit
   end
 
   puts '== Installing dependencies =='
   b_install = 'install'
-  b_install +   ' --full-index --path ' if args[:tails]
+  b_install + ' --full-index --path ' if args[:tails]
   system(bundle('check', tails: args[:tails])) || system!(bundle(b_install, tails: args[:tails]))
 
   unless args[:no_solr]
@@ -184,11 +192,6 @@ chdir APP_ROOT do
     puts("Opened the ports #{app_port} and #{solr_port} in the OUTPUT table of the firewall to localhost")
   end
   puts("The app is accessible from the ips #{input_ips} and from localhost on port #{app_port}") if args[:input]
-
-
-  # puts '== Installing dependencies =='
-  #system! 'gem install bundler --conservative'
-  # system('bundle check') || system!('bundle install')
 
   # Install JavaScript dependencies if using Yarn
   # system('bin/yarn')
