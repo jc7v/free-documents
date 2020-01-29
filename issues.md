@@ -39,7 +39,7 @@ Need to check the solr doc
 
 -> 1.0
 
-It would be great to have the app translated in other languages
+It should be great to have the app translated in other languages
 
 ## 8. Simple setup
 
@@ -82,7 +82,7 @@ Not required for production release but would boost the use of the search bar
 ## 13. Investigate for automatic OCR of uploaded document
 
 * research
-*couldo
+* couldo
 
 It would be great to have automatic OCR on uploadede document with user
 selecting text boxes when needed. Have a look to tesseract-js.
