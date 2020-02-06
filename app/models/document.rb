@@ -94,18 +94,22 @@ class Document < ApplicationRecord
 
   ##
   # Try to extract as much content from the uploaded file
+  # TODO: ensure reader.info is not nil
   def populate_from_asset
     if pdf?
       begin
           ActiveStorage::PdfReader.new(doc_asset.blob).reader do |reader|
-            self.title = convert_to_utf_8(reader.info[:Title] || doc_asset.blob.filename)
-            self.description = convert_to_utf_8(reader.pages.first.text[0..500].gsub(/\s{2,}/, ''))
-            self.author = convert_to_utf_8(reader.info[:Author])
-            unless (pdf_date = reader.info[:CreationDate]).blank?
-              date = Date.strptime(pdf_date, 'D:%Y%m%d')
-              self.realized_at = date if date < Date.today
+            if reader.info.respond_to?(:[])
+              self.title = convert_to_utf_8(reader.info[:Title]
+              self.title = self.doc_asset.blob.filename if self.title.blank?
+              self.author = convert_to_utf_8(reader.info[:Author])
+              unless (pdf_date = reader.info[:CreationDate]).blank?
+                date = Date.strptime(pdf_date, 'D:%Y%m%d')
+                self.realized_at = date if date < Date.today
+              end
             end
-            self.number_of_pages = reader.pages.size
+            self.description = convert_to_utf_8(reader.pages.first.text[0..500].gsub(/\s{2,}/, '')) if reader.pages.try(:first)
+            self.number_of_pages = reader.pages.try(:size)
           end
       rescue PDF::Reader::MalformedPDFError
         self.title = doc_asset.blob.filename
@@ -113,7 +117,7 @@ class Document < ApplicationRecord
     else
       self.title = doc_asset.blob.filename
     end
-    self.title = I18n.t('documents.model.unknown_title') if self.title.empty?
+    self.title = I18n.t('documents.model.unknown_title') if self.title.blank?
   end
 
   ##
@@ -137,6 +141,7 @@ class Document < ApplicationRecord
   ##
   # Determine the encoding of the *string* and from that init a Converter and convert the *string* to UTF-8
   def convert_to_utf_8(string)
+    string = string.to_s
     return if string.encoding == Encoding::UTF_8
     encoder = Encoding::Converter.new(string.encoding, Encoding::UTF_8, undef: :replace)
     encoder.convert(string)
