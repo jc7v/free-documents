@@ -32,5 +32,11 @@ storage/
 /public/assets/
 yarn.lock
 
+vendor/cache
+
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+/config/database.yml
+/config/storage.yml
+/config/sunspot.yml
+/config/environments/production.rb

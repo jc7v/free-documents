@@ -64,6 +64,7 @@ group :development do
   gem 'spring', '~> 2.1.0'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'progress_bar', '~> 1.3.0'
+  gem 'brakeman'
 end
 
 group :test do
