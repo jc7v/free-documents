@@ -100,23 +100,21 @@ class Document < ApplicationRecord
       begin
           ActiveStorage::PdfReader.new(doc_asset.blob).reader do |reader|
             if reader.info.respond_to?(:[])
-              self.title = convert_to_utf_8(reader.info[:Title]
-              self.title = self.doc_asset.blob.filename if self.title.blank?
+              self.title = convert_to_utf_8(reader.info[:Title])
               self.author = convert_to_utf_8(reader.info[:Author])
               unless (pdf_date = reader.info[:CreationDate]).blank?
                 date = Date.strptime(pdf_date, 'D:%Y%m%d')
                 self.realized_at = date if date < Date.today
               end
             end
-            self.description = convert_to_utf_8(reader.pages.first.text[0..500].gsub(/\s{2,}/, '')) if reader.pages.try(:first)
-            self.number_of_pages = reader.pages.try(:size)
+            self.description = convert_to_utf_8(reader.pages.first.text[0..500].gsub(/\s{2,}/, '')) if reader.try(:pages).try(:first)
+            self.number_of_pages = reader.try(:pages).try(:size)
           end
       rescue PDF::Reader::MalformedPDFError
-        self.title = doc_asset.blob.filename
+        # ignored
       end
-    else
-      self.title = doc_asset.blob.filename
     end
+    self.title = self.doc_asset.blob.filename if self.title.blank?
     self.title = I18n.t('documents.model.unknown_title') if self.title.blank?
   end
 
