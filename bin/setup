@@ -151,10 +151,8 @@ chdir APP_ROOT do
     end
     puts "It will execute these commands as root:\n\n" + '-' * 30 + "\n" + apt_install + "\n" + firewall_config + "\n" + '-' * 30
     puts "\nChecking if the firewall rules alreay exists"
-    (`sudo bash -c '#{firewall_config.gsub('-I', '-C').gsub("\n", ' && ')}'`) ? puts 'yes.' : puts 'no.'
     puts "\nProceed? (yes/no)"
     system!("sudo bash -c '#{apt_install}\n#{firewall_config}'") if gets.chomp == 'yes'
-    exit
   end
 
   prepare_ruby_vendor if args[:ruby_vendor]
@@ -178,7 +176,7 @@ chdir APP_ROOT do
       solr('start')
     end
 
-    puts "\n== Checking if node '#{SOLR_NODE}' already exists... =="
+    puts "\n== Checking if node '#{args[:solr_port]}' already exists... =="
     if check_solr_node(SOLR_NODE, solr_port: args[:solr_port])
       puts 'it exists!'
     else
