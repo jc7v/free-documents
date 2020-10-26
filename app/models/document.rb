@@ -5,7 +5,7 @@ class Document < ApplicationRecord
   has_one_attached :doc_asset
   enum status: [:refused, :accepted]
 
-  before_validation :set_number_of_pages_to_0
+  Before_validation :set_number_of_pages_to_0
   after_save :set_file_name
   after_commit :index_to_solr
 
