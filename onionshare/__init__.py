@@ -204,7 +204,7 @@ def main(cwd=None):
             custom_settings=False, config=config, connect_timeout=connect_timeout
         )
     except KeyboardInterrupt:
-        print("")
+        print("Error connecting to onion grater")
         sys.exit()
     except Exception as e:
         sys.exit(e.args[0])

@@ -14,6 +14,7 @@ SOLR_PATH = File.join(APP_ROOT, 'vendor', SOLR_NAME)
 DEFAULT_PKG = %w(default-jre midori imagemagick rails javascript-common ruby-dev
             build-essential libsqlite3-dev libxml2-dev zlib1g-dev yarnpkg unzip wget)
 SOLR_NODE = 'free-documents'
+ONION_SHARE = '/usr/lib/python3/dist-packages/onionshare/'
 
 def system!(*args)
   system(*args) || abort("\n== Command #{args} failed ==")
@@ -33,7 +34,7 @@ def prepare_ruby_vendor
   mkdir_p(RUBY_VENDOR)
   mkdir_p(GEM_CACHE)
   ENV['GEM_HOME'] = RUBY_VENDOR
-  system("bundle config set path='#{GEM_CACHE}'")
+  system("bundle config set path '#{GEM_CACHE}'")
 end
 
 def ip_rules(app_port: 3000, solr_port: 8983, input: true, input_ips: '192.168.0.0/24')
@@ -51,9 +52,9 @@ end
 
 def install_solr
   chdir File.join(APP_ROOT, 'vendor') do
-    puts "/n Downloading solr"
-    system! "wget 'https://www-eu.apache.org/dist/lucene/solr/#{SOLR_VERSION}/#{SOLR_NAME}.zip'"
-    system! "wget 'https://www.apache.org/dist/lucene/solr/#{SOLR_VERSION}/#{SOLR_NAME}.zip.asc'"
+    puts "\n== Downloading solr =="
+    system! "wget 'https://archive.apache.org/dist/lucene/solr/#{SOLR_VERSION}/#{SOLR_NAME}.zip'"
+    system! "wget 'https://archive.apache.org/dist/lucene/solr/#{SOLR_VERSION}/#{SOLR_NAME}.zip.asc'"
 # system! "gpg --verify #{SOLR_NAME}.zip.asc #{SOLR_NAME}.zip"
     system! "unzip #{SOLR_NAME}.zip"
     puts "\n Solr version #{SOLR_VERSION} is installed at #{SOLR_PATH} and not gpg sig verified"
@@ -66,7 +67,13 @@ def solr(cmd = 'start')
 end
 
 def onionservice
-	system(File.join(APP_ROOT, 'onionshare', 'setup.sh'))
+  puts 'Modifyng OnionShare to add it the functionality to publish a tor hidden service linked to any port'
+  onionshare_setup = <<HEREDOC
+cp #{File.join(APP_ROOT, 'onionshare', '__init__.py')} #{ONION_SHARE}
+cp #{File.join(APP_ROOT, 'onionshare', 'onionshare.py')} #{ONION_SHARE}
+cp #{File.join(APP_ROOT, 'onionshare', 'onionshare.yml')} /etc/onion-grater.d/
+HEREDOC
+	execute_as_root("bash -c '#{onionshare_setup.chomp}'", onionshare_setup)
 end
 
 ##
@@ -76,6 +83,12 @@ def check_solr_node(name, solr_port: 8983)
   Net::HTTP
       .get_response(URI("http://localhost:#{solr_port}/solr/#{name}/select?q=*%3A*&wt=json&indent=true"))
       .code == "200"
+end
+
+def execute_as_root(command, explain='')
+  puts "It will execute these commands as root:\n\n" + '-' * 30 + "\n" + explain + "\n" +'-' * 30
+  puts "\nProceed? (yes/[NO])"
+  system!("sudo #{command}") if gets.chomp == 'yes'
 end
 
 def parse_options
@@ -123,8 +136,8 @@ HEREDOC
     opts.on('-r', '--ruby_vendor [BOOLEAN]', FalseClass, 'Package the ruby gems into vendor/ dir and download them under Tor [false]') do |bool|
       args[:ruby_vendor] = bool
     end
-		opts.on('-n', '--onionservice [BOOLEAN]', FalseClass, 'Modify onionshare to allow creating a tor hidden service under Tails') do |bool|
-			args[:onion] = bool
+		opts.on('-n', '--onionservice', 'Modify onionshare to allow creating a tor hidden service under Tails') do
+			args[:onion] = true
 		end
     opts.on('-h', '--help', 'Print the help message') do
       puts opts
@@ -156,10 +169,9 @@ chdir APP_ROOT do
           app_port: args[:app_port], solr_port: args[:solr_port], input: args[:input], input_ips: args[:input_ips]
       )
     end
-    puts "It will execute these commands as root:\n\n" + '-' * 30 + "\n" + apt_install + "\n" + firewall_config + "\n" + '-' * 30
-    puts "\nChecking if the firewall rules alreay exists"
-    puts "\nProceed? (yes/no)"
-    system!("sudo bash -c '#{apt_install}\n#{firewall_config}'") if gets.chomp == 'yes'
+    execute_as_root("bash -c '#{apt_install}'", apt_install )
+    execute_as_root("bash -c '#{firewall_config}'", firewall_config)
+   # puts "\nChecking if the firewall rules alreay exists"
   end
 
   prepare_ruby_vendor if args[:ruby_vendor]
@@ -171,7 +183,7 @@ chdir APP_ROOT do
 
   unless args[:no_solr]
     if Dir.exists?(SOLR_PATH)
-      puts "\n Solr #{SOLR_VERSION} is installed at path: #{SOLR_PATH}"
+      puts "\n== Solr #{SOLR_VERSION} is installed at path: #{SOLR_PATH} =="
     else
       install_solr
     end
@@ -218,9 +230,10 @@ chdir APP_ROOT do
 
 # Modify OnionShare
 if args[:onion]
+  puts "== OnionShare =="
 	onionservice
-	puts "== Now OnionShare is able to publish a new tor onion service linked to your server running locally. =="
-	puts "== Start the server in production and run: onionshare --custom 3000 --persist =="
+	puts "Now OnionShare is able to publish a new tor onion service linked to your server running locally."
+	puts "--> Start the server in production and run: onionshare --custom #{args[:app_port]} --persist"
 end
 
 #

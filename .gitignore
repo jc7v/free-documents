@@ -35,6 +35,7 @@ yarn.lock
 
 vendor/cache
 vendor/ruby
+vendor/solr-*
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
