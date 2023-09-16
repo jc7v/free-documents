@@ -23,6 +23,7 @@ gem 'haml-rails', '~> 0.9.0'
 gem 'bootstrap-sass', '~> 3.3.5.1'
 gem 'simple_form'
 gem 'devise', '~> 4.2.0'
+gem 'rails_admin'
 
 
 # bundle exec rake doc:rails generates the API under doc/api.
