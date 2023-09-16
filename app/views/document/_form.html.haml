@@ -1,3 +1,17 @@
-= simple_form_for @document, url: document_index_path, method: :post, html: {class: 'form-horizontal'} do |f|
-  = f.input :title
-  = f.input :description
+= simple_form_for @document, url: (action_name == 'create' ? document_index_path : document_path(@document)), method: (action_name == 'create' ? :post : :put), html: {class: 'row'} do |f|
+  .col-lg-6.form-group
+    = f.input :title
+    .row
+      .col-8
+        = f.input :author
+      .col-4
+        = f.input :number_of_pages
+      .col-12
+        = f.input :realized_at, start_year: Date.today.year - 110, end_year: Date.today.year
+        %label= t('documents.form.doc_asset')
+        %p= @document.doc_asset.blob.filename
+    = f.hidden_field :doc_asset, value: @document.doc_asset.signed_id if @document.doc_asset.attached?
+  .col-lg-6
+    = f.input :description, input_html: { rows: 8 }
+    = f.association :tags, input_html: {class: 'tags-select2'}
+    = f.submit class: 'btn btn-outline-primary'

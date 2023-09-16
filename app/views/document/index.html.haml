@@ -1,4 +1,23 @@
-%h1 Document#index
-%p Find me in app/views/document/index.html.haml
-
-= link_to 'test', document_path(1)
+%h1
+  = t('documents.index.title')
+= render 'search_form'
+= render 'filter', action_path: root_path
+%hr
+= prev_next_pagination(@documents)
+.row
+  %p= t('documents.index.empty') if @documents.empty?
+  %ul.row.list-unstyled
+    - @documents.each do |doc|
+      %li.col-lg-6.col-xl-4.border
+        %h4
+          = link_to doc.title, document_path(doc)
+          |
+          = document_download_icon(doc)
+        .row
+          .col-sm-4.col-md-3
+            = link_to image_tag(preview_document(doc.doc_asset), class: 'img-thumbnail'), document_path(doc)
+          .col-sm-8.col-md-9
+            %p
+              = doc.description.try(:truncate, 120, separator: ' ') || t('documents.no_description')
+            %h5= tags_to_badges(doc)
+= prev_next_pagination(@documents)

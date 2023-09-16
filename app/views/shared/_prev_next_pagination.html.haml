@@ -1,0 +1,13 @@
+.row.justify-content-center
+  .col-lg-3.sm-col-6.col-9
+    %nav.text-center{'aria-label' => t('documents.paginate')}
+      %ul.pagination
+        -if path_to_prev_page(collection)
+          %li.page-item
+            %a.page-link{ href: path_to_prev_page(collection), 'aria-label' => t('pagination.previous')}
+              %span.glyphicon.glyphicon-menu-left{ 'aria-hidden' => true }
+        %li.page-item.disabled= link_to(t('pagination.page', page: params[:page] || 1, total_pages: total_pages), '#', class: 'page-link', tabindex: '-1', 'aria-disabled' => 'true')
+        -if path_to_next_page(collection)
+          %li.page-item
+            %a.page-link{ href: path_to_next_page(collection), 'aria-label' => t('pagination.next')}
+              %span.glyphicon.glyphicon-menu-right{ 'aria-hidden' => true}

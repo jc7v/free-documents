@@ -1,0 +1,10 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+tag1:
+  name: tag1
+
+tag2:
+  name: tag2
+
+tag3:
+  name: tag3

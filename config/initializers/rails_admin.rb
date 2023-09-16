@@ -1,16 +1,17 @@
 RailsAdmin.config do |config|
 
   config.main_app_name = 'Free documents'
+  
   ### Popular gems integration
 
   ## == Devise ==
   config.authenticate_with do
-    warden.authenticate! scope: :user
+    warden.authenticate! scope: :manager
   end
-  config.current_user_method(&:current_user)
+  config.current_user_method(&:current_manager)
 
-  ## == Cancan ==
-  # config.authorize_with :cancan
+  ## == CancanCan ==
+  # config.authorize_with :cancancan
 
   ## == Pundit ==
   # config.authorize_with :pundit
@@ -20,20 +21,19 @@ RailsAdmin.config do |config|
 
   ### More at https://github.com/sferik/rails_admin/wiki/Base-configuration
 
+  ## == Gravatar integration ==
+  ## To disable Gravatar integration in Navigation Bar set to false
+  # config.show_gravatar = true
+
   config.actions do
-    # root actions
     dashboard                     # mandatory
-    # collection actions
     index                         # mandatory
     new
     export
-    history_index
     bulk_delete
-    # member actions
     show
     edit
     delete
-    history_show
     show_in_app
   end
 end
