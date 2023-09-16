@@ -34,6 +34,7 @@ storage/
 yarn.lock
 
 vendor/cache
+vendor/ruby
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key

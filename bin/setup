@@ -65,6 +65,10 @@ def solr(cmd = 'start')
   system("#{File.join(SOLR_PATH, 'bin', 'solr')} #{cmd}")
 end
 
+def onionservice
+	system(File.join(APP_ROOT, 'onionshare', 'setup.sh'))
+end
+
 ##
 # Check if a solr node *name* already exists on solr
 # return *true* if it exists
@@ -119,6 +123,9 @@ HEREDOC
     opts.on('-r', '--ruby_vendor [BOOLEAN]', FalseClass, 'Package the ruby gems into vendor/ dir and download them under Tor [false]') do |bool|
       args[:ruby_vendor] = bool
     end
+		opts.on('-n', '--onionservice [BOOLEAN]', FalseClass, 'Modify onionshare to allow creating a tor hidden service under Tails') do |bool|
+			args[:onion] = bool
+		end
     opts.on('-h', '--help', 'Print the help message') do
       puts opts
       puts "\n" + tails_options_msg
@@ -208,6 +215,13 @@ chdir APP_ROOT do
    copy 'config/sunspot.yml.sample', 'config/sunspot.yml'
    copy 'config/environments/production.rb.sample', 'config/environments/production.rb.sample'
  end
+
+# Modify OnionShare
+if args[:onion]
+	onionservice
+	puts "== Now OnionShare is able to publish a new tor onion service linked to your server running locally. =="
+	puts "== Start the server in production and run: onionshare --custom 3000 --persist =="
+end
 
 #
 # puts "\n== Removing old logs and tempfiles =="
